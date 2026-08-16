@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+
+# Node
+node_modules/
+portal/dist/
+portal/.vite/
+*.tsbuildinfo
+
+# Go
+services/ingest/bin/
+services/ingest/ingest
+
+# Generated artifacts
+data/audio/*.wav
+data/audio/*.aiff
+data/models/
+eval/reports/*.json
+eval/reports/*.md
+!eval/reports/.gitkeep
+.artifacts/
+
+# Local config & secrets
+.env
+.env.local
+*.pem
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
