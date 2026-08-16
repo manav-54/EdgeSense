@@ -41,11 +41,24 @@ RE_ADDRESS = re.compile(
     re.IGNORECASE,
 )
 
+# The trigger half is case-insensitive (transcripts capitalise sentence
+# starts: "My name is ..."), but the captured name must stay case-sensitive so
+# the group only matches capitalised tokens. Scoped inline flags give us both;
+# a module-level re.IGNORECASE would make [A-Z] match anything.
 RE_NAME_TRIGGER = re.compile(
-    r"\b(?:my name is|this is|i'm|i am|speaking with|it's|name on the account is|"
-    r"account holder is|calling for|on behalf of)\s+"
+    r"\b(?i:my name is|this is|i'm|i am|speaking with|it's|name is|"
+    r"name on the account is|account holder is|calling for|on behalf of|"
+    r"the name is|under the name)\s+"
     r"((?:[A-Z][\w'\-]+)(?:\s+[A-Z][\w'\-]+){0,2})",
 )
+
+#: Two or more capitalised tokens in a row that are not sentence-initial. This
+#: is the classic cheap name heuristic; the stopword list and the street-suffix
+#: guard keep "Northwind Financial" and "Fenwick Road" out of it.
+RE_CAPITALISED_RUN = re.compile(r"(?<![.!?]\s)(?<!^)\b([A-Z][a-z'\-]{1,}(?:\s+[A-Z][a-z'\-]{1,})+)")
+
+#: A person name shape, used to rescue spans the small model labels FAC or ORG.
+RE_PERSON_SHAPE = re.compile(r"^[A-Z][a-z'\-]{1,}(?:\s+[A-Z][a-z'\-]{1,}){1,2}$")
 
 #: Words that get capitalised in transcripts without being names.
 NAME_STOPWORDS = frozenset({
@@ -84,6 +97,19 @@ class HeuristicNER:
             s = m.start(1)
             out.append(Detection(PIIType.PERSON, s, s + len(name), "ner", 0.75, name))
 
+        # Untriggered capitalised runs: lower confidence, since this is the
+        # rule most likely to fire on a product or branch name.
+        for m in RE_CAPITALISED_RUN.finditer(text):
+            phrase = m.group(1)
+            tokens = [t.lower() for t in phrase.split()]
+            if any(t in NAME_STOPWORDS for t in tokens):
+                continue
+            if re.search(rf"\b(?:{STREET_SUFFIX})\b", phrase, re.IGNORECASE):
+                continue
+            out.append(
+                Detection(PIIType.PERSON, m.start(1), m.end(1), "ner", 0.55, phrase)
+            )
+
         return out
 
 
@@ -114,12 +140,20 @@ class SpacyNER:
             return self._fallback.entities(text)
 
         for ent in doc.ents:
-            if ent.label_ in self.PERSONISH:
+            # A name-shaped span counts as a person whatever the model called
+            # it. en_core_web_sm labels "Jordan Calloway" as FAC often enough
+            # that trusting the label costs real recall, and the span itself is
+            # the part it gets right.
+            person_shaped = bool(RE_PERSON_SHAPE.match(ent.text.strip()))
+            if ent.label_ in self.PERSONISH or (person_shaped and ent.label_ != "ORG"):
                 if ent.text.split()[0].lower() in NAME_STOPWORDS:
                     continue
+                if re.search(rf"\b(?:{STREET_SUFFIX})\b", ent.text, re.IGNORECASE):
+                    continue
+                conf = 0.8 if ent.label_ in self.PERSONISH else 0.6
                 out.append(
                     Detection(PIIType.PERSON, ent.start_char, ent.end_char,
-                              "ner", 0.8, ent.text)
+                              "ner", conf, ent.text)
                 )
             elif ent.label_ in self.PLACEISH:
                 # Only accept a place as an address if it looks like a street

@@ -22,7 +22,7 @@ hidden behind a single blended F1.
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 from edgesense_core.contracts import PIIType
 
@@ -72,10 +72,13 @@ RE_EMAIL = re.compile(
     r"\b[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}\b"
 )
 
-# Spoken email: "j dot calloway at example dot com"
+# Spoken email. Two shapes, because ASR only partially recovers the spelling:
+#   "j dot calloway at example dot com"   (fully spoken)
+#   "taconquo at example.com"             (whisper collapses the local part)
+# The second is why the domain half accepts real dots as well as the word.
 RE_SPOKEN_EMAIL = re.compile(
-    r"\b[A-Za-z0-9]+(?:\s+(?:dot|\.)\s+[A-Za-z0-9]+)*\s+at\s+"
-    r"[A-Za-z0-9]+(?:\s+(?:dot|\.)\s+[A-Za-z0-9]+)+\b",
+    r"\b[A-Za-z0-9]+(?:\s*(?:dot|\.)\s*[A-Za-z0-9]+)*\s+at\s+"
+    r"[A-Za-z0-9]+(?:\s*(?:dot|\.)\s*[A-Za-z0-9]+)+\b",
     re.IGNORECASE,
 )
 
@@ -109,7 +112,20 @@ RE_ACCOUNT_LABELLED = re.compile(
 CARD_LENGTHS = (19, 18, 17, 16, 15, 14, 13)
 PHONE_LENGTHS = (11, 10)
 SSN_LENGTH = 9
-UNCLAIMED_MIN = 9  # backstop: any leftover run this long is redacted
+UNCLAIMED_MIN = 9  # backstop: any standalone run this long is redacted
+
+#: With an identifier word nearby, the backstop drops this low. "AC 8821, uh,
+#: 3366" is eight digits -- under the standalone threshold, but sitting next to
+#: the word "account", so it is an account number and not a quantity. Kept
+#: separate from CONTEXT_WORDS because that set includes broad verbs like
+#: "pay" and "charge" that would sweep up ordinary amounts.
+IDENTIFIER_MIN = 5
+IDENTIFIER_CONTEXT = (
+    "account", "acct", "acc no", "a/c", "card", "visa", "mastercard", "amex",
+    "discover", "social", "ssn", "phone", "mobile", "cell", "reference",
+    "policy", "member", "order", "routing", "sort code", "case number",
+    "customer number", "confirmation", "claim number",
+)
 
 
 @dataclass(frozen=True)
@@ -290,7 +306,24 @@ def _classify_at(
         conf = 0.85 if _has_context(text, s, e, PIIType.ACCOUNT, extra) else 0.4
         return Detection(PIIType.ACCOUNT, s, e, "context", conf, digits[pos : pos + n])
 
+    # Shorter than the standalone backstop, but an identifier word is nearby.
+    if avail >= IDENTIFIER_MIN:
+        s, e = stream.span(pos, pos + avail)
+        if _identifier_nearby(text, s, e, extra):
+            return Detection(
+                PIIType.ACCOUNT, s, e, "context", 0.5, digits[pos : pos + avail]
+            )
+
     return None
+
+
+def _identifier_nearby(text: str, start: int, end: int, extra: str = "") -> bool:
+    lo = max(0, start - CONTEXT_WINDOW)
+    hi = min(len(text), end + CONTEXT_WINDOW)
+    window = text[lo:hi].lower()
+    if extra:
+        window = f"{extra.lower()} {window}"
+    return any(w in window for w in IDENTIFIER_CONTEXT)
 
 
 def detect_digit_stream(
@@ -300,16 +333,74 @@ def detect_digit_stream(
     stream = stream if stream is not None else build_digit_stream(text)
     out: list[Detection] = []
     for run_start, run_end in _runs(stream):
+        claims: list[tuple[int, int, Detection]] = []
         pos = run_start
         while pos < run_end:
             det = _classify_at(text, stream, pos, run_end, extra)
             if det is None:
                 pos += 1
                 continue
-            out.append(det)
-            # Advance past the digits this detection consumed.
             consumed = len(det.canonical) or 1
+            claims.append((pos, pos + consumed, det))
             pos += consumed
+        out.extend(_absorb_leftovers(stream, run_start, run_end, claims))
+    return out
+
+
+def _absorb_leftovers(
+    stream: DigitStream,
+    run_start: int,
+    run_end: int,
+    claims: list[tuple[int, int, Detection]],
+) -> list[Detection]:
+    """Extend claims to swallow adjacent digits nothing else claimed.
+
+    Real ASR drops and invents digits, so a fifteen-digit Amex arrives as
+    fourteen: Luhn fails, the length rules miss, and the scanner claims the
+    first ten as a phone number and leaves ``0005`` sitting in the transcript.
+    Four digits of a live card is still a disclosure, and it is the exact
+    failure this pipeline exists to prevent.
+
+    So any digits left over inside a run that already contains a claim are
+    absorbed into the neighbouring claim rather than released. Runs with no
+    claim at all are untouched here -- the ``UNCLAIMED_MIN`` backstop in
+    ``_classify_at`` decides those, so a short standalone "press 1234" is not
+    swept up by this rule.
+    """
+    if not claims:
+        return []
+
+    claims.sort(key=lambda c: c[0])
+    covered = [[s, e, d] for s, e, d in claims]
+
+    # Leading gap -> extend the first claim backwards.
+    if covered[0][0] > run_start:
+        covered[0][0] = run_start
+    # Trailing gap -> extend the last claim forwards.
+    if covered[-1][1] < run_end:
+        covered[-1][1] = run_end
+    # Interior gaps -> give them to the preceding claim.
+    for i in range(len(covered) - 1):
+        if covered[i][1] < covered[i + 1][0]:
+            covered[i][1] = covered[i + 1][0]
+
+    out: list[Detection] = []
+    for start_idx, end_idx, det in covered:
+        s, e = stream.span(start_idx, end_idx)
+        if (s, e) == (det.start, det.end):
+            out.append(det)
+            continue
+        out.append(
+            replace(
+                det,
+                start=s,
+                end=e,
+                canonical=stream.text[start_idx:end_idx],
+                # Absorbing changes what the span covers, so the confidence
+                # should reflect the widened, less certain claim.
+                confidence=min(det.confidence, 0.9),
+            )
+        )
     return out
 
 

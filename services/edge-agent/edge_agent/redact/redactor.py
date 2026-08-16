@@ -155,10 +155,22 @@ class Redactor:
 
     # -- substitution ------------------------------------------------------
 
-    def redact(self, text: str, extra_context: str = "") -> RedactionResult:
-        """Replace every detection with a typed placeholder."""
+    def redact(
+        self,
+        text: str,
+        extra_context: str = "",
+        detections: list[Detection] | None = None,
+    ) -> RedactionResult:
+        """Replace every detection with a typed placeholder.
+
+        ``detections`` may be supplied by a caller that has already run
+        detection over a wider context than ``text`` -- the streaming path does
+        this so a cross-segment finding is not recomputed (and lost) against
+        the narrower emitted slice.
+        """
         t0 = monotonic_ms()
-        detections = self.detect(text, extra_context)
+        if detections is None:
+            detections = self.detect(text, extra_context)
 
         parts: list[str] = []
         refs: list[RedactionRef] = []
@@ -231,6 +243,42 @@ class Redactor:
 
         return char_start
 
+    def _protect_orphaned_carry(
+        self, combined: str, carry_len: int, detections: list[Detection]
+    ) -> list[Detection]:
+        """Redact a held fragment that the next segment did not complete.
+
+        The hold assumes the number continues in the following segment. Often
+        it does not: the agent says "Go ahead." in between, and the fragment is
+        now stranded in the middle of the combined text rather than at its end.
+        The hold releases, the fragment is too short to trip any detector, and
+        eight digits of a card go out in the clear.
+
+        A fragment was withheld precisely because it looked like part of a
+        secret. If nothing has since claimed it, that suspicion stands, so it
+        is redacted as an untyped ``ACCOUNT`` rather than released. Choosing
+        the wrong label is survivable; releasing the digits is not.
+        """
+        carry_region = combined[:carry_len]
+        if any(d.start < carry_len and d.end > 0 for d in detections):
+            return detections  # something claimed it; nothing to do
+
+        stream = build_digit_stream(carry_region)
+        if len(stream) < MIN_HOLD_DIGITS:
+            return detections
+
+        start, end = stream.span(0, len(stream))
+        return detections + [
+            Detection(
+                type=PIIType.ACCOUNT,
+                start=start,
+                end=end,
+                detector="cross_segment",
+                confidence=0.5,
+                canonical=stream.text,
+            )
+        ]
+
     def push(self, text: str, *, is_final: bool = True) -> StreamResult:
         """Feed one ASR segment. Returns what is safe to emit right now.
 
@@ -244,6 +292,11 @@ class Redactor:
         extra = self._context_tail
 
         detections = self.detect(combined, extra)
+        carry_len = len(self._carry)
+        if carry_len:
+            detections = resolve(
+                self._protect_orphaned_carry(combined, carry_len, detections)
+            )
         hold_at = self._hold_point(combined, detections)
 
         if hold_at is None:
@@ -252,9 +305,14 @@ class Redactor:
             emit_src, held_src = combined[:hold_at], combined[hold_at:]
 
         # Redact only the part being emitted, so a held fragment never gets a
-        # placeholder minted for a value we have not finished seeing.
-        result = self.redact(emit_src, extra) if emit_src.strip() else RedactionResult(
-            "", (), (), 0.0
+        # placeholder minted for a value we have not finished seeing. The
+        # detections computed over `combined` are reused rather than recomputed,
+        # so a cross-segment finding survives the narrowing.
+        emit_dets = [d for d in detections if d.end <= len(emit_src)]
+        result = (
+            self.redact(emit_src, extra, emit_dets)
+            if emit_src.strip()
+            else RedactionResult("", (), (), 0.0)
         )
         held_digits = sum(ch.isdigit() for ch in held_src) if held_src else 0
 
