@@ -1,0 +1,98 @@
+{
+  "call_id": "gold-escalation_repeat_failure-v0",
+  "scenario": "escalation_repeat_failure",
+  "variant": 0,
+  "category": "escalation",
+  "agent_id": "agent_02",
+  "agent_name": "Nadia",
+  "turns": [
+    {
+      "idx": 0,
+      "speaker": "agent",
+      "text": "Thanks for calling Northwind Financial, my name is Nadia. Just so you know, this call is recorded for quality and training. How can I help?",
+      "pii": []
+    },
+    {
+      "idx": 1,
+      "speaker": "customer",
+      "text": "This is the fourth time I've called about this same charge.",
+      "pii": []
+    },
+    {
+      "idx": 2,
+      "speaker": "agent",
+      "text": "I'm sorry. Let me pull up the history.",
+      "pii": []
+    },
+    {
+      "idx": 3,
+      "speaker": "customer",
+      "text": "Every single person tells me it's fixed and it isn't.",
+      "pii": []
+    },
+    {
+      "idx": 4,
+      "speaker": "agent",
+      "text": "I see three prior contacts. The dispute was closed in the merchant's favour twice.",
+      "pii": []
+    },
+    {
+      "idx": 5,
+      "speaker": "customer",
+      "text": "That's absurd. I have the receipt showing I returned the item.",
+      "pii": []
+    },
+    {
+      "idx": 6,
+      "speaker": "agent",
+      "text": "I understand. I can reopen it with the receipt as evidence.",
+      "pii": []
+    },
+    {
+      "idx": 7,
+      "speaker": "customer",
+      "text": "No. I want a supervisor. Right now.",
+      "pii": []
+    },
+    {
+      "idx": 8,
+      "speaker": "agent",
+      "text": "Let me get someone on the line for you.",
+      "pii": []
+    },
+    {
+      "idx": 9,
+      "speaker": "customer",
+      "text": "I've wasted three hours on this. Three hours.",
+      "pii": []
+    },
+    {
+      "idx": 10,
+      "speaker": "agent",
+      "text": "I hear you, and I'm escalating this to my supervisor now.",
+      "pii": []
+    }
+  ],
+  "labels": {
+    "primary_intent": "billing_dispute",
+    "resolution": "escalated",
+    "sentiment_start": -0.5,
+    "sentiment_end": -0.85,
+    "escalation_risk": "high",
+    "escalated": true,
+    "secondary_intents": [],
+    "required_disclosures": [
+      "REC-001"
+    ],
+    "disclosures_given": [
+      "REC-001"
+    ],
+    "compliance_violations": [],
+    "action_items": [
+      "Transfer to supervisor",
+      "Reopen dispute with customer receipt as evidence"
+    ],
+    "notes": ""
+  },
+  "pii_count": 0
+}

@@ -1,0 +1,94 @@
+{
+  "call_id": "gold-escalation_legal_threat-v0",
+  "scenario": "escalation_legal_threat",
+  "variant": 0,
+  "category": "escalation",
+  "agent_id": "agent_02",
+  "agent_name": "Nadia",
+  "turns": [
+    {
+      "idx": 0,
+      "speaker": "agent",
+      "text": "Thanks for calling Northwind Financial, my name is Nadia. Just so you know, this call is recorded for quality and training. How can I help?",
+      "pii": []
+    },
+    {
+      "idx": 1,
+      "speaker": "customer",
+      "text": "My account has been frozen for eleven days and nobody will tell me why.",
+      "pii": []
+    },
+    {
+      "idx": 2,
+      "speaker": "agent",
+      "text": "I can see a security hold. Let me check the reason code.",
+      "pii": []
+    },
+    {
+      "idx": 3,
+      "speaker": "customer",
+      "text": "Eleven days. My mortgage payment bounced because of this.",
+      "pii": []
+    },
+    {
+      "idx": 4,
+      "speaker": "agent",
+      "text": "The hold came from a fraud review. I don't have the detail on my side.",
+      "pii": []
+    },
+    {
+      "idx": 5,
+      "speaker": "customer",
+      "text": "So nobody can tell me anything? I'm speaking to a lawyer about this.",
+      "pii": []
+    },
+    {
+      "idx": 6,
+      "speaker": "agent",
+      "text": "I understand your frustration. Let me escalate to the fraud team directly.",
+      "pii": []
+    },
+    {
+      "idx": 7,
+      "speaker": "customer",
+      "text": "Do that. And I want it in writing.",
+      "pii": []
+    },
+    {
+      "idx": 8,
+      "speaker": "agent",
+      "text": "I'm requesting a written explanation and a callback within twenty-four hours.",
+      "pii": []
+    },
+    {
+      "idx": 9,
+      "speaker": "customer",
+      "text": "Twenty-four hours. Then I'm filing a complaint with the regulator.",
+      "pii": []
+    }
+  ],
+  "labels": {
+    "primary_intent": "fraud_report",
+    "resolution": "escalated",
+    "sentiment_start": -0.6,
+    "sentiment_end": -0.9,
+    "escalation_risk": "high",
+    "escalated": true,
+    "secondary_intents": [
+      "general_inquiry"
+    ],
+    "required_disclosures": [
+      "REC-001"
+    ],
+    "disclosures_given": [
+      "REC-001"
+    ],
+    "compliance_violations": [],
+    "action_items": [
+      "Escalate hold review to fraud team",
+      "Provide written explanation within twenty-four hours"
+    ],
+    "notes": ""
+  },
+  "pii_count": 0
+}

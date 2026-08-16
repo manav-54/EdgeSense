@@ -1,0 +1,88 @@
+{
+  "call_id": "gold-compliance_missing_mini_miranda-v0",
+  "scenario": "compliance_missing_mini_miranda",
+  "variant": 0,
+  "category": "compliance",
+  "agent_id": "agent_03",
+  "agent_name": "Marcus",
+  "turns": [
+    {
+      "idx": 0,
+      "speaker": "agent",
+      "text": "This is Marcus calling from Northwind Recovery regarding your past due balance. This call is recorded.",
+      "pii": []
+    },
+    {
+      "idx": 1,
+      "speaker": "customer",
+      "text": "Okay, what's this about?",
+      "pii": []
+    },
+    {
+      "idx": 2,
+      "speaker": "agent",
+      "text": "You have a balance of one thousand two hundred dollars that's ninety days past due.",
+      "pii": []
+    },
+    {
+      "idx": 3,
+      "speaker": "customer",
+      "text": "I know, I've been out of work.",
+      "pii": []
+    },
+    {
+      "idx": 4,
+      "speaker": "agent",
+      "text": "We need to arrange payment. Can you pay half today?",
+      "pii": []
+    },
+    {
+      "idx": 5,
+      "speaker": "customer",
+      "text": "I really can't right now.",
+      "pii": []
+    },
+    {
+      "idx": 6,
+      "speaker": "agent",
+      "text": "What can you pay?",
+      "pii": []
+    },
+    {
+      "idx": 7,
+      "speaker": "customer",
+      "text": "Maybe fifty dollars.",
+      "pii": []
+    },
+    {
+      "idx": 8,
+      "speaker": "agent",
+      "text": "I'll note that and we'll follow up next month.",
+      "pii": []
+    }
+  ],
+  "labels": {
+    "primary_intent": "collections",
+    "resolution": "follow_up_required",
+    "sentiment_start": -0.3,
+    "sentiment_end": -0.5,
+    "escalation_risk": "medium",
+    "escalated": false,
+    "secondary_intents": [],
+    "required_disclosures": [
+      "REC-001",
+      "MINI-003"
+    ],
+    "disclosures_given": [
+      "REC-001"
+    ],
+    "compliance_violations": [
+      "MINI-003"
+    ],
+    "action_items": [
+      "Follow up on fifty dollar payment next month"
+    ],
+    "notes": "Recording disclosure given, mini-Miranda absent on a collections call."
+  },
+  "pii_count": 0
+}

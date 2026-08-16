@@ -1,0 +1,80 @@
+{
+  "call_id": "gold-compliance_missing_right_to_cancel-v1",
+  "scenario": "compliance_missing_right_to_cancel",
+  "variant": 1,
+  "category": "compliance",
+  "agent_id": "agent_02",
+  "agent_name": "Nadia",
+  "turns": [
+    {
+      "idx": 0,
+      "speaker": "agent",
+      "text": "Thanks for calling Northwind Financial, my name is Nadia. Just so you know, this call is recorded for quality and training. How can I help?",
+      "pii": []
+    },
+    {
+      "idx": 1,
+      "speaker": "customer",
+      "text": "I'm interested in the premium account tier.",
+      "pii": []
+    },
+    {
+      "idx": 2,
+      "speaker": "agent",
+      "text": "Good choice. It's fifteen dollars a month, billed automatically, and includes fee waivers.",
+      "pii": []
+    },
+    {
+      "idx": 3,
+      "speaker": "customer",
+      "text": "Sign me up.",
+      "pii": []
+    },
+    {
+      "idx": 4,
+      "speaker": "agent",
+      "text": "You're enrolled starting today. First charge posts tomorrow.",
+      "pii": []
+    },
+    {
+      "idx": 5,
+      "speaker": "customer",
+      "text": "Sounds good.",
+      "pii": []
+    },
+    {
+      "idx": 6,
+      "speaker": "agent",
+      "text": "Anything else?",
+      "pii": []
+    },
+    {
+      "idx": 7,
+      "speaker": "customer",
+      "text": "No, thanks.",
+      "pii": []
+    }
+  ],
+  "labels": {
+    "primary_intent": "plan_upgrade",
+    "resolution": "resolved",
+    "sentiment_start": 0.4,
+    "sentiment_end": 0.5,
+    "escalation_risk": "none",
+    "escalated": false,
+    "secondary_intents": [],
+    "required_disclosures": [
+      "REC-001",
+      "RTC-007"
+    ],
+    "disclosures_given": [
+      "REC-001"
+    ],
+    "compliance_violations": [
+      "RTC-007"
+    ],
+    "action_items": [],
+    "notes": "Recurring enrollment with no cancellation-window disclosure."
+  },
+  "pii_count": 0
+}

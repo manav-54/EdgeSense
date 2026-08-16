@@ -1,0 +1,79 @@
+{
+  "call_id": "gold-compliance_no_identity_verification-v1",
+  "scenario": "compliance_no_identity_verification",
+  "variant": 1,
+  "category": "compliance",
+  "agent_id": "agent_03",
+  "agent_name": "Marcus",
+  "turns": [
+    {
+      "idx": 0,
+      "speaker": "agent",
+      "text": "Thanks for calling Northwind Financial, my name is Marcus. Just so you know, this call is recorded for quality and training. How can I help?",
+      "pii": []
+    },
+    {
+      "idx": 1,
+      "speaker": "customer",
+      "text": "Hi, this is Dana Whitfield. I need to close my account.",
+      "pii": [
+        {
+          "type": "PERSON",
+          "start": 12,
+          "end": 26,
+          "value": "Dana Whitfield",
+          "canonical": "Dana Whitfield",
+          "surface_form": "spaced",
+          "is_partial": false,
+          "split_group": null
+        }
+      ]
+    },
+    {
+      "idx": 2,
+      "speaker": "agent",
+      "text": "Sorry to hear that. I can process the closure now.",
+      "pii": []
+    },
+    {
+      "idx": 3,
+      "speaker": "customer",
+      "text": "Great, go ahead.",
+      "pii": []
+    },
+    {
+      "idx": 4,
+      "speaker": "agent",
+      "text": "Account closed. Any remaining balance is mailed as a cheque.",
+      "pii": []
+    },
+    {
+      "idx": 5,
+      "speaker": "customer",
+      "text": "Perfect, thanks.",
+      "pii": []
+    }
+  ],
+  "labels": {
+    "primary_intent": "account_closure",
+    "resolution": "resolved",
+    "sentiment_start": 0.0,
+    "sentiment_end": 0.3,
+    "escalation_risk": "none",
+    "escalated": false,
+    "secondary_intents": [],
+    "required_disclosures": [
+      "REC-001",
+      "VERIF-004"
+    ],
+    "disclosures_given": [
+      "REC-001"
+    ],
+    "compliance_violations": [
+      "VERIF-004"
+    ],
+    "action_items": [],
+    "notes": "Account closed on the strength of a spoken name alone."
+  },
+  "pii_count": 1
+}

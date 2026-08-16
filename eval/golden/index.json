@@ -1,0 +1,407 @@
+{
+  "seed": 20260816,
+  "call_count": 48,
+  "turn_count": 446,
+  "pii_span_count": 110,
+  "by_category": {
+    "adversarial": 12,
+    "ambiguous": 4,
+    "clean": 4,
+    "compliance": 14,
+    "escalation": 4,
+    "pii_heavy": 10
+  },
+  "by_pii_type": {
+    "ACCOUNT": 14,
+    "ADDRESS": 4,
+    "CARD": 26,
+    "DOB": 18,
+    "EMAIL": 10,
+    "NON_CARD": 1,
+    "PERSON": 11,
+    "PHONE": 14,
+    "SSN": 12
+  },
+  "by_surface_form": {
+    "hyphenated": 30,
+    "noisy": 14,
+    "paired": 10,
+    "plain": 16,
+    "spaced": 32,
+    "spelled": 8
+  },
+  "calls": [
+    {
+      "call_id": "gold-clean_balance_inquiry-v0",
+      "category": "clean",
+      "scenario": "clean_balance_inquiry",
+      "pii_count": 1,
+      "violations": []
+    },
+    {
+      "call_id": "gold-clean_password_reset-v0",
+      "category": "clean",
+      "scenario": "clean_password_reset",
+      "pii_count": 0,
+      "violations": []
+    },
+    {
+      "call_id": "gold-clean_technical_support-v0",
+      "category": "clean",
+      "scenario": "clean_technical_support",
+      "pii_count": 0,
+      "violations": []
+    },
+    {
+      "call_id": "gold-clean_general_inquiry_hours-v0",
+      "category": "clean",
+      "scenario": "clean_general_inquiry_hours",
+      "pii_count": 0,
+      "violations": []
+    },
+    {
+      "call_id": "gold-pii_card_replacement-v0",
+      "category": "pii_heavy",
+      "scenario": "pii_card_replacement",
+      "pii_count": 5,
+      "violations": []
+    },
+    {
+      "call_id": "gold-pii_card_replacement-v1",
+      "category": "pii_heavy",
+      "scenario": "pii_card_replacement",
+      "pii_count": 5,
+      "violations": []
+    },
+    {
+      "call_id": "gold-pii_fraud_report_full_profile-v0",
+      "category": "pii_heavy",
+      "scenario": "pii_fraud_report_full_profile",
+      "pii_count": 7,
+      "violations": []
+    },
+    {
+      "call_id": "gold-pii_fraud_report_full_profile-v1",
+      "category": "pii_heavy",
+      "scenario": "pii_fraud_report_full_profile",
+      "pii_count": 7,
+      "violations": []
+    },
+    {
+      "call_id": "gold-pii_address_change_verified-v0",
+      "category": "pii_heavy",
+      "scenario": "pii_address_change_verified",
+      "pii_count": 6,
+      "violations": []
+    },
+    {
+      "call_id": "gold-pii_address_change_verified-v1",
+      "category": "pii_heavy",
+      "scenario": "pii_address_change_verified",
+      "pii_count": 6,
+      "violations": []
+    },
+    {
+      "call_id": "gold-pii_payment_arrangement-v0",
+      "category": "pii_heavy",
+      "scenario": "pii_payment_arrangement",
+      "pii_count": 4,
+      "violations": []
+    },
+    {
+      "call_id": "gold-pii_payment_arrangement-v1",
+      "category": "pii_heavy",
+      "scenario": "pii_payment_arrangement",
+      "pii_count": 4,
+      "violations": []
+    },
+    {
+      "call_id": "gold-pii_refund_bank_details-v0",
+      "category": "pii_heavy",
+      "scenario": "pii_refund_bank_details",
+      "pii_count": 5,
+      "violations": []
+    },
+    {
+      "call_id": "gold-pii_refund_bank_details-v1",
+      "category": "pii_heavy",
+      "scenario": "pii_refund_bank_details",
+      "pii_count": 5,
+      "violations": []
+    },
+    {
+      "call_id": "gold-compliance_missing_recording_disclosure-v0",
+      "category": "compliance",
+      "scenario": "compliance_missing_recording_disclosure",
+      "pii_count": 2,
+      "violations": [
+        "REC-001"
+      ]
+    },
+    {
+      "call_id": "gold-compliance_missing_recording_disclosure-v1",
+      "category": "compliance",
+      "scenario": "compliance_missing_recording_disclosure",
+      "pii_count": 2,
+      "violations": [
+        "REC-001"
+      ]
+    },
+    {
+      "call_id": "gold-compliance_pci_full_readback-v0",
+      "category": "compliance",
+      "scenario": "compliance_pci_full_readback",
+      "pii_count": 2,
+      "violations": [
+        "PCI-002"
+      ]
+    },
+    {
+      "call_id": "gold-compliance_pci_full_readback-v1",
+      "category": "compliance",
+      "scenario": "compliance_pci_full_readback",
+      "pii_count": 2,
+      "violations": [
+        "PCI-002"
+      ]
+    },
+    {
+      "call_id": "gold-compliance_missing_mini_miranda-v0",
+      "category": "compliance",
+      "scenario": "compliance_missing_mini_miranda",
+      "pii_count": 0,
+      "violations": [
+        "MINI-003"
+      ]
+    },
+    {
+      "call_id": "gold-compliance_missing_mini_miranda-v1",
+      "category": "compliance",
+      "scenario": "compliance_missing_mini_miranda",
+      "pii_count": 0,
+      "violations": [
+        "MINI-003"
+      ]
+    },
+    {
+      "call_id": "gold-compliance_prohibited_guarantee-v0",
+      "category": "compliance",
+      "scenario": "compliance_prohibited_guarantee",
+      "pii_count": 0,
+      "violations": [
+        "PROHIB-005"
+      ]
+    },
+    {
+      "call_id": "gold-compliance_prohibited_guarantee-v1",
+      "category": "compliance",
+      "scenario": "compliance_prohibited_guarantee",
+      "pii_count": 0,
+      "violations": [
+        "PROHIB-005"
+      ]
+    },
+    {
+      "call_id": "gold-compliance_fdcpa_threat-v0",
+      "category": "compliance",
+      "scenario": "compliance_fdcpa_threat",
+      "pii_count": 0,
+      "violations": [
+        "FDCPA-006"
+      ]
+    },
+    {
+      "call_id": "gold-compliance_fdcpa_threat-v1",
+      "category": "compliance",
+      "scenario": "compliance_fdcpa_threat",
+      "pii_count": 0,
+      "violations": [
+        "FDCPA-006"
+      ]
+    },
+    {
+      "call_id": "gold-compliance_no_identity_verification-v0",
+      "category": "compliance",
+      "scenario": "compliance_no_identity_verification",
+      "pii_count": 1,
+      "violations": [
+        "VERIF-004"
+      ]
+    },
+    {
+      "call_id": "gold-compliance_no_identity_verification-v1",
+      "category": "compliance",
+      "scenario": "compliance_no_identity_verification",
+      "pii_count": 1,
+      "violations": [
+        "VERIF-004"
+      ]
+    },
+    {
+      "call_id": "gold-compliance_missing_right_to_cancel-v0",
+      "category": "compliance",
+      "scenario": "compliance_missing_right_to_cancel",
+      "pii_count": 0,
+      "violations": [
+        "RTC-007"
+      ]
+    },
+    {
+      "call_id": "gold-compliance_missing_right_to_cancel-v1",
+      "category": "compliance",
+      "scenario": "compliance_missing_right_to_cancel",
+      "pii_count": 0,
+      "violations": [
+        "RTC-007"
+      ]
+    },
+    {
+      "call_id": "gold-escalation_repeat_failure-v0",
+      "category": "escalation",
+      "scenario": "escalation_repeat_failure",
+      "pii_count": 0,
+      "violations": []
+    },
+    {
+      "call_id": "gold-escalation_legal_threat-v0",
+      "category": "escalation",
+      "scenario": "escalation_legal_threat",
+      "pii_count": 0,
+      "violations": []
+    },
+    {
+      "call_id": "gold-escalation_slow_burn-v0",
+      "category": "escalation",
+      "scenario": "escalation_slow_burn",
+      "pii_count": 0,
+      "violations": []
+    },
+    {
+      "call_id": "gold-escalation_deescalated_successfully-v0",
+      "category": "escalation",
+      "scenario": "escalation_deescalated_successfully",
+      "pii_count": 0,
+      "violations": []
+    },
+    {
+      "call_id": "gold-ambiguous_intent_mixed-v0",
+      "category": "ambiguous",
+      "scenario": "ambiguous_intent_mixed",
+      "pii_count": 0,
+      "violations": []
+    },
+    {
+      "call_id": "gold-ambiguous_sarcastic_satisfaction-v0",
+      "category": "ambiguous",
+      "scenario": "ambiguous_sarcastic_satisfaction",
+      "pii_count": 0,
+      "violations": []
+    },
+    {
+      "call_id": "gold-ambiguous_third_party_pii-v0",
+      "category": "ambiguous",
+      "scenario": "ambiguous_third_party_pii",
+      "pii_count": 2,
+      "violations": []
+    },
+    {
+      "call_id": "gold-ambiguous_near_miss_numbers-v0",
+      "category": "ambiguous",
+      "scenario": "ambiguous_near_miss_numbers",
+      "pii_count": 1,
+      "violations": []
+    },
+    {
+      "call_id": "gold-adversarial_spelled_card-v0",
+      "category": "adversarial",
+      "scenario": "adversarial_spelled_card",
+      "pii_count": 2,
+      "violations": []
+    },
+    {
+      "call_id": "gold-adversarial_spelled_card-v1",
+      "category": "adversarial",
+      "scenario": "adversarial_spelled_card",
+      "pii_count": 2,
+      "violations": []
+    },
+    {
+      "call_id": "gold-adversarial_paired_digits-v0",
+      "category": "adversarial",
+      "scenario": "adversarial_paired_digits",
+      "pii_count": 3,
+      "violations": []
+    },
+    {
+      "call_id": "gold-adversarial_paired_digits-v1",
+      "category": "adversarial",
+      "scenario": "adversarial_paired_digits",
+      "pii_count": 3,
+      "violations": []
+    },
+    {
+      "call_id": "gold-adversarial_split_across_turns-v0",
+      "category": "adversarial",
+      "scenario": "adversarial_split_across_turns",
+      "pii_count": 4,
+      "violations": []
+    },
+    {
+      "call_id": "gold-adversarial_split_across_turns-v1",
+      "category": "adversarial",
+      "scenario": "adversarial_split_across_turns",
+      "pii_count": 4,
+      "violations": []
+    },
+    {
+      "call_id": "gold-adversarial_noisy_disfluent-v0",
+      "category": "adversarial",
+      "scenario": "adversarial_noisy_disfluent",
+      "pii_count": 3,
+      "violations": []
+    },
+    {
+      "call_id": "gold-adversarial_noisy_disfluent-v1",
+      "category": "adversarial",
+      "scenario": "adversarial_noisy_disfluent",
+      "pii_count": 3,
+      "violations": []
+    },
+    {
+      "call_id": "gold-adversarial_mixed_forms_one_call-v0",
+      "category": "adversarial",
+      "scenario": "adversarial_mixed_forms_one_call",
+      "pii_count": 6,
+      "violations": []
+    },
+    {
+      "call_id": "gold-adversarial_mixed_forms_one_call-v1",
+      "category": "adversarial",
+      "scenario": "adversarial_mixed_forms_one_call",
+      "pii_count": 6,
+      "violations": []
+    },
+    {
+      "call_id": "gold-adversarial_pii_near_policy_violation-v0",
+      "category": "adversarial",
+      "scenario": "adversarial_pii_near_policy_violation",
+      "pii_count": 3,
+      "violations": [
+        "REC-001",
+        "PCI-002",
+        "PROHIB-005"
+      ]
+    },
+    {
+      "call_id": "gold-adversarial_pii_near_policy_violation-v1",
+      "category": "adversarial",
+      "scenario": "adversarial_pii_near_policy_violation",
+      "pii_count": 3,
+      "violations": [
+        "REC-001",
+        "PCI-002",
+        "PROHIB-005"
+      ]
+    }
+  ]
+}

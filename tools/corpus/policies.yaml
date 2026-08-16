@@ -1,0 +1,127 @@
+# Policy catalog for EdgeSense compliance checks.
+#
+# This is the corpus of record for two consumers:
+#   1. the worker's `lookup_policy(policy_id)` tool (loaded directly, or
+#      indexed into Azure AI Search when credentials are configured), and
+#   2. the golden corpus, whose labels cite these ids.
+#
+# Keeping one file means a policy edit cannot silently desync the labels from
+# what the agent is told the rule is.
+
+version: "1.2"
+
+policies:
+  - id: REC-001
+    title: Call recording disclosure
+    kind: required_disclosure
+    severity: high
+    window: first_3_agent_turns
+    summary: >
+      The agent must disclose that the call is recorded or monitored before
+      collecting any customer information. Disclosure must occur within the
+      first three agent turns.
+    satisfied_by_phrases:
+      - "this call is recorded"
+      - "this call may be recorded"
+      - "recorded for quality"
+      - "monitored or recorded"
+      - "recorded and monitored"
+    rationale: >
+      Two-party consent jurisdictions require notice before recording. Late
+      disclosure does not cure the earlier portion of the recording.
+
+  - id: PCI-002
+    title: No full card number readback
+    kind: prohibited_action
+    severity: critical
+    summary: >
+      The agent must never ask the customer to read a full primary account
+      number aloud, nor repeat one back. Last four digits only.
+    prohibited_phrases:
+      - "read me the full card number"
+      - "read the whole card number"
+      - "give me all sixteen digits"
+      - "what's the full number on the card"
+      - "read that back to me"
+    rationale: >
+      Full PANs spoken aloud land in the call recording and in agent notes,
+      pulling both systems into PCI-DSS scope.
+
+  - id: MINI-003
+    title: Mini-Miranda debt collection notice
+    kind: required_disclosure
+    severity: critical
+    applies_when: intent in [collections]
+    window: first_2_agent_turns
+    summary: >
+      On collections calls the agent must state that the communication is from
+      a debt collector and that information obtained will be used for that
+      purpose.
+    satisfied_by_phrases:
+      - "this is an attempt to collect a debt"
+      - "i am a debt collector"
+      - "communication from a debt collector"
+    rationale: FDCPA 15 U.S.C. 1692e(11).
+
+  - id: VERIF-004
+    title: Identity verification before account changes
+    kind: required_action
+    severity: high
+    applies_when: intent in [address_change, account_closure, card_replacement]
+    summary: >
+      The agent must verify identity with at least one factor beyond the
+      caller's name before modifying account details.
+    satisfied_by_phrases:
+      - "verify your identity"
+      - "confirm the last four"
+      - "security question"
+      - "date of birth on the account"
+      - "one-time code"
+    rationale: Account takeover is the dominant fraud vector on inbound voice.
+
+  - id: PROHIB-005
+    title: No outcome guarantees
+    kind: prohibited_phrase
+    severity: high
+    summary: >
+      The agent must not guarantee an approval, refund, credit, or investigation
+      outcome that is not yet decided.
+    prohibited_phrases:
+      - "i guarantee"
+      - "i can promise you"
+      - "you will definitely be approved"
+      - "you're guaranteed to get"
+      - "i promise you'll get your money back"
+    rationale: >
+      Unqualified guarantees create UDAAP exposure and set an expectation the
+      back office cannot honour.
+
+  - id: FDCPA-006
+    title: No threats of action not intended or permitted
+    kind: prohibited_phrase
+    severity: critical
+    summary: >
+      The agent must not threaten legal action, arrest, wage garnishment, or
+      credit destruction as leverage.
+    prohibited_phrases:
+      - "we'll take you to court"
+      - "you could be arrested"
+      - "we'll garnish your wages"
+      - "i'll ruin your credit"
+      - "we will sue you"
+    rationale: FDCPA 15 U.S.C. 1692e(5).
+
+  - id: RTC-007
+    title: Right to cancel disclosure
+    kind: required_disclosure
+    severity: medium
+    applies_when: intent in [plan_upgrade]
+    summary: >
+      When enrolling a customer in a new recurring plan the agent must state
+      the cancellation window and that cancellation is free.
+    satisfied_by_phrases:
+      - "you can cancel within"
+      - "cancel any time at no charge"
+      - "thirty day cancellation"
+      - "free to cancel"
+    rationale: Negative-option billing rules require pre-enrollment notice.

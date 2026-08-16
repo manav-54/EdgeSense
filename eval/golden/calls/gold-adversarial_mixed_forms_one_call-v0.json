@@ -1,0 +1,147 @@
+{
+  "call_id": "gold-adversarial_mixed_forms_one_call-v0",
+  "scenario": "adversarial_mixed_forms_one_call",
+  "variant": 0,
+  "category": "adversarial",
+  "agent_id": "agent_04",
+  "agent_name": "Imani",
+  "turns": [
+    {
+      "idx": 0,
+      "speaker": "agent",
+      "text": "Thanks for calling Northwind Financial, my name is Imani. Just so you know, this call is recorded for quality and training. How can I help?",
+      "pii": []
+    },
+    {
+      "idx": 1,
+      "speaker": "customer",
+      "text": "My card is 4242 4242 4242 4242.",
+      "pii": [
+        {
+          "type": "CARD",
+          "start": 11,
+          "end": 30,
+          "value": "4242424242424242",
+          "canonical": "4242424242424242",
+          "surface_form": "spaced",
+          "is_partial": false,
+          "split_group": null
+        }
+      ]
+    },
+    {
+      "idx": 2,
+      "speaker": "agent",
+      "text": "Thank you.",
+      "pii": []
+    },
+    {
+      "idx": 3,
+      "speaker": "customer",
+      "text": "Phone is three one two five five five zero one two three, and the account is forty four seventy one ninety two.",
+      "pii": [
+        {
+          "type": "PHONE",
+          "start": 9,
+          "end": 56,
+          "value": "312-555-0123",
+          "canonical": "312-555-0123",
+          "surface_form": "spelled",
+          "is_partial": false,
+          "split_group": null
+        },
+        {
+          "type": "ACCOUNT",
+          "start": 77,
+          "end": 110,
+          "value": "ACCT-4471902",
+          "canonical": "ACCT-4471902",
+          "surface_form": "paired",
+          "is_partial": false,
+          "split_group": null
+        }
+      ]
+    },
+    {
+      "idx": 4,
+      "speaker": "agent",
+      "text": "Got all that.",
+      "pii": []
+    },
+    {
+      "idx": 5,
+      "speaker": "customer",
+      "text": "Date of birth oh seven twenty nine nineteen ninety, social nine one two eight eight seven seven six six.",
+      "pii": [
+        {
+          "type": "DOB",
+          "start": 14,
+          "end": 50,
+          "value": "07/29/1990",
+          "canonical": "07/29/1990",
+          "surface_form": "paired",
+          "is_partial": false,
+          "split_group": null
+        },
+        {
+          "type": "SSN",
+          "start": 59,
+          "end": 103,
+          "value": "912-88-7766",
+          "canonical": "912-88-7766",
+          "surface_form": "spelled",
+          "is_partial": false,
+          "split_group": null
+        }
+      ]
+    },
+    {
+      "idx": 6,
+      "speaker": "agent",
+      "text": "I don't need the social but you're verified.",
+      "pii": []
+    },
+    {
+      "idx": 7,
+      "speaker": "customer",
+      "text": "Email me at m.rivera@example.org please.",
+      "pii": [
+        {
+          "type": "EMAIL",
+          "start": 12,
+          "end": 32,
+          "value": "m.rivera@example.org",
+          "canonical": "m.rivera@example.org",
+          "surface_form": "noisy",
+          "is_partial": false,
+          "split_group": null
+        }
+      ]
+    },
+    {
+      "idx": 8,
+      "speaker": "agent",
+      "text": "Will do.",
+      "pii": []
+    }
+  ],
+  "labels": {
+    "primary_intent": "general_inquiry",
+    "resolution": "resolved",
+    "sentiment_start": 0.1,
+    "sentiment_end": 0.3,
+    "escalation_risk": "none",
+    "escalated": false,
+    "secondary_intents": [],
+    "required_disclosures": [
+      "REC-001"
+    ],
+    "disclosures_given": [
+      "REC-001"
+    ],
+    "compliance_violations": [],
+    "action_items": [],
+    "notes": "Every numeric PII type in a different surface form within one call."
+  },
+  "pii_count": 6
+}
