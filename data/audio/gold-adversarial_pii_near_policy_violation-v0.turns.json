@@ -1,0 +1,92 @@
+{
+  "call_id": "gold-adversarial_pii_near_policy_violation-v0",
+  "audio": "gold-adversarial_pii_near_policy_violation-v0.wav",
+  "sample_rate": 16000,
+  "duration_ms": 39238,
+  "backend": "macos-say",
+  "peak_dbfs": -2.4,
+  "agent_id": "agent_04",
+  "turns": [
+    {
+      "idx": 0,
+      "speaker": "agent",
+      "start_ms": 300,
+      "end_ms": 4817,
+      "text": "Northwind Financial, this is Imani. What can I do for you?",
+      "spoken_text": "Northwind Financial, this is Imani. What can I do for you?",
+      "voice": "Fred"
+    },
+    {
+      "idx": 1,
+      "speaker": "customer",
+      "start_ms": 5077,
+      "end_ms": 7965,
+      "text": "I need to pay this off before it goes to collections.",
+      "spoken_text": "I need to pay this off before it goes to collections.",
+      "voice": "Karen"
+    },
+    {
+      "idx": 2,
+      "speaker": "agent",
+      "start_ms": 8225,
+      "end_ms": 11059,
+      "text": "Read me the full card number and I'll process it.",
+      "spoken_text": "Read me the full card number and I'll process it.",
+      "voice": "Fred"
+    },
+    {
+      "idx": 3,
+      "speaker": "customer",
+      "start_ms": 11319,
+      "end_ms": 17607,
+      "text": "It's 4000, uh, 0566 5566 5556.",
+      "spoken_text": "It's 4 0 0 0, uh, 0 5 6 6 5 5 6 6 5 5 5 6.",
+      "voice": "Karen"
+    },
+    {
+      "idx": 4,
+      "speaker": "agent",
+      "start_ms": 17867,
+      "end_ms": 19738,
+      "text": "And read that back to me once more.",
+      "spoken_text": "And read that back to me once more.",
+      "voice": "Fred"
+    },
+    {
+      "idx": 5,
+      "speaker": "customer",
+      "start_ms": 19998,
+      "end_ms": 32824,
+      "text": "4000, um, 0566 5566, let me see, 5556. My social is 9128 8776, let me see, 6 too.",
+      "spoken_text": "4 0 0 0, um, 0 5 6 6 5 5 6 6, let me see, 5 5 5 6. My social is 9 1 2 8 8 7 7 6, let me see, 6 too.",
+      "voice": "Karen"
+    },
+    {
+      "idx": 6,
+      "speaker": "agent",
+      "start_ms": 33084,
+      "end_ms": 35895,
+      "text": "I guarantee this clears your balance completely.",
+      "spoken_text": "I guarantee this clears your balance completely.",
+      "voice": "Fred"
+    },
+    {
+      "idx": 7,
+      "speaker": "customer",
+      "start_ms": 36155,
+      "end_ms": 37388,
+      "text": "Okay, good.",
+      "spoken_text": "Okay, good.",
+      "voice": "Karen"
+    },
+    {
+      "idx": 8,
+      "speaker": "agent",
+      "start_ms": 37648,
+      "end_ms": 38578,
+      "text": "You're all set.",
+      "spoken_text": "You're all set.",
+      "voice": "Fred"
+    }
+  ]
+}

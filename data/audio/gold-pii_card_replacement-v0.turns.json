@@ -1,0 +1,119 @@
+{
+  "call_id": "gold-pii_card_replacement-v0",
+  "audio": "gold-pii_card_replacement-v0.wav",
+  "sample_rate": 16000,
+  "duration_ms": 54679,
+  "backend": "macos-say",
+  "peak_dbfs": -1.5,
+  "agent_id": "agent_02",
+  "turns": [
+    {
+      "idx": 0,
+      "speaker": "agent",
+      "start_ms": 300,
+      "end_ms": 9287,
+      "text": "Thanks for calling Northwind Financial, my name is Nadia. Just so you know, this call is recorded for quality and training. How can I help?",
+      "spoken_text": "Thanks for calling Northwind Financial, my name is Nadia. Just so you know, this call is recorded for quality and training. How can I help?",
+      "voice": "Daniel"
+    },
+    {
+      "idx": 1,
+      "speaker": "customer",
+      "start_ms": 9547,
+      "end_ms": 14140,
+      "text": "My card was damaged, I need a replacement. My name is Jordan Calloway.",
+      "spoken_text": "My card was damaged, I need a replacement. My name is Jordan Calloway.",
+      "voice": "Karen"
+    },
+    {
+      "idx": 2,
+      "speaker": "agent",
+      "start_ms": 14400,
+      "end_ms": 21628,
+      "text": "I can order that. Before I make changes, I need to verify your identity \u2014 can you confirm your date of birth?",
+      "spoken_text": "I can order that. Before I make changes, I need to verify your identity \u2014 can you confirm your date of birth?",
+      "voice": "Daniel"
+    },
+    {
+      "idx": 3,
+      "speaker": "customer",
+      "start_ms": 21888,
+      "end_ms": 24460,
+      "text": "It's 0117 1993.",
+      "spoken_text": "It's 0 1 1 7 1 9 9 3.",
+      "voice": "Karen"
+    },
+    {
+      "idx": 4,
+      "speaker": "agent",
+      "start_ms": 24720,
+      "end_ms": 27430,
+      "text": "Thank you. And the best number to reach you?",
+      "spoken_text": "Thank you. And the best number to reach you?",
+      "voice": "Daniel"
+    },
+    {
+      "idx": 5,
+      "speaker": "customer",
+      "start_ms": 27690,
+      "end_ms": 34351,
+      "text": "212-555-0177. You can also email me at priya.nair@example.org.",
+      "spoken_text": "2 1 2 5 5 5 0 1 7 7. You can also email me at priya.nair at example dot org.",
+      "voice": "Karen"
+    },
+    {
+      "idx": 6,
+      "speaker": "agent",
+      "start_ms": 34611,
+      "end_ms": 40314,
+      "text": "Noted. Is the card still going to 1420 Marigold Lane, Apartment 3B?",
+      "spoken_text": "Noted. Is the card still going to 1 4 2 0 Marigold Lane, Apartment 3B?",
+      "voice": "Daniel"
+    },
+    {
+      "idx": 7,
+      "speaker": "customer",
+      "start_ms": 40574,
+      "end_ms": 42214,
+      "text": "Yes, same address.",
+      "spoken_text": "Yes, same address.",
+      "voice": "Karen"
+    },
+    {
+      "idx": 8,
+      "speaker": "agent",
+      "start_ms": 42474,
+      "end_ms": 48558,
+      "text": "Your replacement card ending in the same last four ships today, arriving in five to seven business days.",
+      "spoken_text": "Your replacement card ending in the same last four ships today, arriving in five to seven business days.",
+      "voice": "Daniel"
+    },
+    {
+      "idx": 9,
+      "speaker": "customer",
+      "start_ms": 48818,
+      "end_ms": 50626,
+      "text": "Appreciate it, thanks.",
+      "spoken_text": "Appreciate it, thanks.",
+      "voice": "Karen"
+    },
+    {
+      "idx": 10,
+      "speaker": "agent",
+      "start_ms": 50886,
+      "end_ms": 52852,
+      "text": "Of course. Anything else?",
+      "spoken_text": "Of course. Anything else?",
+      "voice": "Daniel"
+    },
+    {
+      "idx": 11,
+      "speaker": "customer",
+      "start_ms": 53112,
+      "end_ms": 54019,
+      "text": "That's everything.",
+      "spoken_text": "That's everything.",
+      "voice": "Karen"
+    }
+  ]
+}

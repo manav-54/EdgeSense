@@ -1,0 +1,92 @@
+{
+  "call_id": "gold-adversarial_mixed_forms_one_call-v0",
+  "audio": "gold-adversarial_mixed_forms_one_call-v0.wav",
+  "sample_rate": 16000,
+  "duration_ms": 38083,
+  "backend": "macos-say",
+  "peak_dbfs": -1.5,
+  "agent_id": "agent_04",
+  "turns": [
+    {
+      "idx": 0,
+      "speaker": "agent",
+      "start_ms": 300,
+      "end_ms": 9275,
+      "text": "Thanks for calling Northwind Financial, my name is Imani. Just so you know, this call is recorded for quality and training. How can I help?",
+      "spoken_text": "Thanks for calling Northwind Financial, my name is Imani. Just so you know, this call is recorded for quality and training. How can I help?",
+      "voice": "Daniel"
+    },
+    {
+      "idx": 1,
+      "speaker": "customer",
+      "start_ms": 9535,
+      "end_ms": 14657,
+      "text": "My card is 4242 4242 4242 4242.",
+      "spoken_text": "My card is 4 2 4 2 4 2 4 2 4 2 4 2 4 2 4 2.",
+      "voice": "Moira"
+    },
+    {
+      "idx": 2,
+      "speaker": "agent",
+      "start_ms": 14917,
+      "end_ms": 15687,
+      "text": "Thank you.",
+      "spoken_text": "Thank you.",
+      "voice": "Daniel"
+    },
+    {
+      "idx": 3,
+      "speaker": "customer",
+      "start_ms": 15947,
+      "end_ms": 22736,
+      "text": "Phone is three one two five five five zero one two three, and the account is forty four seventy one ninety two.",
+      "spoken_text": "Phone is three one two five five five zero one two three, and the account is forty four seventy one ninety two.",
+      "voice": "Moira"
+    },
+    {
+      "idx": 4,
+      "speaker": "agent",
+      "start_ms": 22996,
+      "end_ms": 23823,
+      "text": "Got all that.",
+      "spoken_text": "Got all that.",
+      "voice": "Daniel"
+    },
+    {
+      "idx": 5,
+      "speaker": "customer",
+      "start_ms": 24083,
+      "end_ms": 30608,
+      "text": "Date of birth oh seven twenty nine nineteen ninety, social nine one two eight eight seven seven six six.",
+      "spoken_text": "Date of birth oh seven twenty nine nineteen ninety, social nine one two eight eight seven seven six six.",
+      "voice": "Moira"
+    },
+    {
+      "idx": 6,
+      "speaker": "agent",
+      "start_ms": 30868,
+      "end_ms": 33243,
+      "text": "I don't need the social but you're verified.",
+      "spoken_text": "I don't need the social but you're verified.",
+      "voice": "Daniel"
+    },
+    {
+      "idx": 7,
+      "speaker": "customer",
+      "start_ms": 33503,
+      "end_ms": 36511,
+      "text": "Email me at m.rivera@example.org please.",
+      "spoken_text": "Email me at m.rivera at example dot org please.",
+      "voice": "Moira"
+    },
+    {
+      "idx": 8,
+      "speaker": "agent",
+      "start_ms": 36771,
+      "end_ms": 37423,
+      "text": "Will do.",
+      "spoken_text": "Will do.",
+      "voice": "Daniel"
+    }
+  ]
+}

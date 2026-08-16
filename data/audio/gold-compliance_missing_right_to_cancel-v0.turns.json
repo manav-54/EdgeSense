@@ -1,0 +1,83 @@
+{
+  "call_id": "gold-compliance_missing_right_to_cancel-v0",
+  "audio": "gold-compliance_missing_right_to_cancel-v0.wav",
+  "sample_rate": 16000,
+  "duration_ms": 27658,
+  "backend": "macos-say",
+  "peak_dbfs": -1.5,
+  "agent_id": "agent_05",
+  "turns": [
+    {
+      "idx": 0,
+      "speaker": "agent",
+      "start_ms": 300,
+      "end_ms": 9229,
+      "text": "Thanks for calling Northwind Financial, my name is Devon. Just so you know, this call is recorded for quality and training. How can I help?",
+      "spoken_text": "Thanks for calling Northwind Financial, my name is Devon. Just so you know, this call is recorded for quality and training. How can I help?",
+      "voice": "Daniel"
+    },
+    {
+      "idx": 1,
+      "speaker": "customer",
+      "start_ms": 9489,
+      "end_ms": 11871,
+      "text": "I'm interested in the premium account tier.",
+      "spoken_text": "I'm interested in the premium account tier.",
+      "voice": "Moira"
+    },
+    {
+      "idx": 2,
+      "speaker": "agent",
+      "start_ms": 12131,
+      "end_ms": 18009,
+      "text": "Good choice. It's fifteen dollars a month, billed automatically, and includes fee waivers.",
+      "spoken_text": "Good choice. It's fifteen dollars a month, billed automatically, and includes fee waivers.",
+      "voice": "Daniel"
+    },
+    {
+      "idx": 3,
+      "speaker": "customer",
+      "start_ms": 18269,
+      "end_ms": 19101,
+      "text": "Sign me up.",
+      "spoken_text": "Sign me up.",
+      "voice": "Moira"
+    },
+    {
+      "idx": 4,
+      "speaker": "agent",
+      "start_ms": 19361,
+      "end_ms": 23148,
+      "text": "You're enrolled starting today. First charge posts tomorrow.",
+      "spoken_text": "You're enrolled starting today. First charge posts tomorrow.",
+      "voice": "Daniel"
+    },
+    {
+      "idx": 5,
+      "speaker": "customer",
+      "start_ms": 23408,
+      "end_ms": 24194,
+      "text": "Sounds good.",
+      "spoken_text": "Sounds good.",
+      "voice": "Moira"
+    },
+    {
+      "idx": 6,
+      "speaker": "agent",
+      "start_ms": 24454,
+      "end_ms": 25445,
+      "text": "Anything else?",
+      "spoken_text": "Anything else?",
+      "voice": "Daniel"
+    },
+    {
+      "idx": 7,
+      "speaker": "customer",
+      "start_ms": 25705,
+      "end_ms": 26998,
+      "text": "No, thanks.",
+      "spoken_text": "No, thanks.",
+      "voice": "Moira"
+    }
+  ]
+}

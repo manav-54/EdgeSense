@@ -1,0 +1,83 @@
+{
+  "call_id": "gold-adversarial_spelled_card-v0",
+  "audio": "gold-adversarial_spelled_card-v0.wav",
+  "sample_rate": 16000,
+  "duration_ms": 34215,
+  "backend": "macos-say",
+  "peak_dbfs": -1.5,
+  "agent_id": "agent_03",
+  "turns": [
+    {
+      "idx": 0,
+      "speaker": "agent",
+      "start_ms": 300,
+      "end_ms": 9426,
+      "text": "Thanks for calling Northwind Financial, my name is Marcus. Just so you know, this call is recorded for quality and training. How can I help?",
+      "spoken_text": "Thanks for calling Northwind Financial, my name is Marcus. Just so you know, this call is recorded for quality and training. How can I help?",
+      "voice": "Daniel"
+    },
+    {
+      "idx": 1,
+      "speaker": "customer",
+      "start_ms": 9686,
+      "end_ms": 12156,
+      "text": "I'd like to pay my balance with a different card.",
+      "spoken_text": "I'd like to pay my balance with a different card.",
+      "voice": "Samantha"
+    },
+    {
+      "idx": 2,
+      "speaker": "agent",
+      "start_ms": 12416,
+      "end_ms": 14708,
+      "text": "I can take the last four digits only.",
+      "spoken_text": "I can take the last four digits only.",
+      "voice": "Daniel"
+    },
+    {
+      "idx": 3,
+      "speaker": "customer",
+      "start_ms": 14968,
+      "end_ms": 20893,
+      "text": "Let me just read it out, it's five two zero zero eight two eight two eight two eight two eight two one zero.",
+      "spoken_text": "Let me just read it out, it's five two zero zero eight two eight two eight two eight two eight two one zero.",
+      "voice": "Samantha"
+    },
+    {
+      "idx": 4,
+      "speaker": "agent",
+      "start_ms": 21153,
+      "end_ms": 24350,
+      "text": "I only need the last four, but I have what I need.",
+      "spoken_text": "I only need the last four, but I have what I need.",
+      "voice": "Daniel"
+    },
+    {
+      "idx": 5,
+      "speaker": "customer",
+      "start_ms": 24610,
+      "end_ms": 29518,
+      "text": "And my phone is two zero six five five five zero one six four if the payment fails.",
+      "spoken_text": "And my phone is two zero six five five five zero one six four if the payment fails.",
+      "voice": "Samantha"
+    },
+    {
+      "idx": 6,
+      "speaker": "agent",
+      "start_ms": 29778,
+      "end_ms": 32077,
+      "text": "Payment of four hundred dollars went through.",
+      "spoken_text": "Payment of four hundred dollars went through.",
+      "voice": "Daniel"
+    },
+    {
+      "idx": 7,
+      "speaker": "customer",
+      "start_ms": 32337,
+      "end_ms": 33555,
+      "text": "Great, thanks.",
+      "spoken_text": "Great, thanks.",
+      "voice": "Samantha"
+    }
+  ]
+}

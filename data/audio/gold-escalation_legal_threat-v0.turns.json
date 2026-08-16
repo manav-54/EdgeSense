@@ -1,0 +1,101 @@
+{
+  "call_id": "gold-escalation_legal_threat-v0",
+  "audio": "gold-escalation_legal_threat-v0.wav",
+  "sample_rate": 16000,
+  "duration_ms": 49811,
+  "backend": "macos-say",
+  "peak_dbfs": -2.0,
+  "agent_id": "agent_02",
+  "turns": [
+    {
+      "idx": 0,
+      "speaker": "agent",
+      "start_ms": 300,
+      "end_ms": 10732,
+      "text": "Thanks for calling Northwind Financial, my name is Nadia. Just so you know, this call is recorded for quality and training. How can I help?",
+      "spoken_text": "Thanks for calling Northwind Financial, my name is Nadia. Just so you know, this call is recorded for quality and training. How can I help?",
+      "voice": "Fred"
+    },
+    {
+      "idx": 1,
+      "speaker": "customer",
+      "start_ms": 10992,
+      "end_ms": 14804,
+      "text": "My account has been frozen for eleven days and nobody will tell me why.",
+      "spoken_text": "My account has been frozen for eleven days and nobody will tell me why.",
+      "voice": "Samantha"
+    },
+    {
+      "idx": 2,
+      "speaker": "agent",
+      "start_ms": 15064,
+      "end_ms": 19431,
+      "text": "I can see a security hold. Let me check the reason code.",
+      "spoken_text": "I can see a security hold. Let me check the reason code.",
+      "voice": "Fred"
+    },
+    {
+      "idx": 3,
+      "speaker": "customer",
+      "start_ms": 19691,
+      "end_ms": 22974,
+      "text": "Eleven days. My mortgage payment bounced because of this.",
+      "spoken_text": "Eleven days. My mortgage payment bounced because of this.",
+      "voice": "Samantha"
+    },
+    {
+      "idx": 4,
+      "speaker": "agent",
+      "start_ms": 23234,
+      "end_ms": 28093,
+      "text": "The hold came from a fraud review. I don't have the detail on my side.",
+      "spoken_text": "The hold came from a fraud review. I don't have the detail on my side.",
+      "voice": "Fred"
+    },
+    {
+      "idx": 5,
+      "speaker": "customer",
+      "start_ms": 28353,
+      "end_ms": 32280,
+      "text": "So nobody can tell me anything? I'm speaking to a lawyer about this.",
+      "spoken_text": "So nobody can tell me anything? I'm speaking to a lawyer about this.",
+      "voice": "Samantha"
+    },
+    {
+      "idx": 6,
+      "speaker": "agent",
+      "start_ms": 32540,
+      "end_ms": 37673,
+      "text": "I understand your frustration. Let me escalate to the fraud team directly.",
+      "spoken_text": "I understand your frustration. Let me escalate to the fraud team directly.",
+      "voice": "Fred"
+    },
+    {
+      "idx": 7,
+      "speaker": "customer",
+      "start_ms": 37933,
+      "end_ms": 39969,
+      "text": "Do that. And I want it in writing.",
+      "spoken_text": "Do that. And I want it in writing.",
+      "voice": "Samantha"
+    },
+    {
+      "idx": 8,
+      "speaker": "agent",
+      "start_ms": 40229,
+      "end_ms": 45071,
+      "text": "I'm requesting a written explanation and a callback within twenty-four hours.",
+      "spoken_text": "I'm requesting a written explanation and a callback within twenty four hours.",
+      "voice": "Fred"
+    },
+    {
+      "idx": 9,
+      "speaker": "customer",
+      "start_ms": 45331,
+      "end_ms": 49151,
+      "text": "Twenty-four hours. Then I'm filing a complaint with the regulator.",
+      "spoken_text": "Twenty four hours. Then I'm filing a complaint with the regulator.",
+      "voice": "Samantha"
+    }
+  ]
+}

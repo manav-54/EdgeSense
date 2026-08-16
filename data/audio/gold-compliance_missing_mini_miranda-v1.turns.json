@@ -1,0 +1,92 @@
+{
+  "call_id": "gold-compliance_missing_mini_miranda-v1",
+  "audio": "gold-compliance_missing_mini_miranda-v1.wav",
+  "sample_rate": 16000,
+  "duration_ms": 28570,
+  "backend": "macos-say",
+  "peak_dbfs": -4.1,
+  "agent_id": "agent_01",
+  "turns": [
+    {
+      "idx": 0,
+      "speaker": "agent",
+      "start_ms": 300,
+      "end_ms": 7110,
+      "text": "This is Ray calling from Northwind Recovery regarding your past due balance. This call is recorded.",
+      "spoken_text": "This is Ray calling from Northwind Recovery regarding your past due balance. This call is recorded.",
+      "voice": "Fred"
+    },
+    {
+      "idx": 1,
+      "speaker": "customer",
+      "start_ms": 7370,
+      "end_ms": 9147,
+      "text": "Okay, what's this about?",
+      "spoken_text": "Okay, what's this about?",
+      "voice": "Moira"
+    },
+    {
+      "idx": 2,
+      "speaker": "agent",
+      "start_ms": 9407,
+      "end_ms": 14389,
+      "text": "You have a balance of one thousand two hundred dollars that's ninety days past due.",
+      "spoken_text": "You have a balance of one thousand two hundred dollars that's ninety days past due.",
+      "voice": "Fred"
+    },
+    {
+      "idx": 3,
+      "speaker": "customer",
+      "start_ms": 14649,
+      "end_ms": 16569,
+      "text": "I know, I've been out of work.",
+      "spoken_text": "I know, I've been out of work.",
+      "voice": "Moira"
+    },
+    {
+      "idx": 4,
+      "speaker": "agent",
+      "start_ms": 16829,
+      "end_ms": 20511,
+      "text": "We need to arrange payment. Can you pay half today?",
+      "spoken_text": "We need to arrange payment. Can you pay half today?",
+      "voice": "Fred"
+    },
+    {
+      "idx": 5,
+      "speaker": "customer",
+      "start_ms": 20771,
+      "end_ms": 22250,
+      "text": "I really can't right now.",
+      "spoken_text": "I really can't right now.",
+      "voice": "Moira"
+    },
+    {
+      "idx": 6,
+      "speaker": "agent",
+      "start_ms": 22510,
+      "end_ms": 23522,
+      "text": "What can you pay?",
+      "spoken_text": "What can you pay?",
+      "voice": "Fred"
+    },
+    {
+      "idx": 7,
+      "speaker": "customer",
+      "start_ms": 23782,
+      "end_ms": 25153,
+      "text": "Maybe fifty dollars.",
+      "spoken_text": "Maybe fifty dollars.",
+      "voice": "Moira"
+    },
+    {
+      "idx": 8,
+      "speaker": "agent",
+      "start_ms": 25413,
+      "end_ms": 27910,
+      "text": "I'll note that and we'll follow up next month.",
+      "spoken_text": "I'll note that and we'll follow up next month.",
+      "voice": "Fred"
+    }
+  ]
+}

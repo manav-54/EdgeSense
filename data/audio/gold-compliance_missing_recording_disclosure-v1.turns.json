@@ -1,0 +1,101 @@
+{
+  "call_id": "gold-compliance_missing_recording_disclosure-v1",
+  "audio": "gold-compliance_missing_recording_disclosure-v1.wav",
+  "sample_rate": 16000,
+  "duration_ms": 29233,
+  "backend": "macos-say",
+  "peak_dbfs": -0.5,
+  "agent_id": "agent_01",
+  "turns": [
+    {
+      "idx": 0,
+      "speaker": "agent",
+      "start_ms": 300,
+      "end_ms": 4331,
+      "text": "Northwind Financial, this is Ray. What can I do for you?",
+      "spoken_text": "Northwind Financial, this is Ray. What can I do for you?",
+      "voice": "Daniel"
+    },
+    {
+      "idx": 1,
+      "speaker": "customer",
+      "start_ms": 4591,
+      "end_ms": 7336,
+      "text": "I need to dispute a charge from last Tuesday.",
+      "spoken_text": "I need to dispute a charge from last Tuesday.",
+      "voice": "Moira"
+    },
+    {
+      "idx": 2,
+      "speaker": "agent",
+      "start_ms": 7596,
+      "end_ms": 9651,
+      "text": "Sure. What's the account number?",
+      "spoken_text": "Sure. What's the account number?",
+      "voice": "Daniel"
+    },
+    {
+      "idx": 3,
+      "speaker": "customer",
+      "start_ms": 9911,
+      "end_ms": 12393,
+      "text": "5521-9084.",
+      "spoken_text": "5 5 2 1 9 0 8 4.",
+      "voice": "Moira"
+    },
+    {
+      "idx": 4,
+      "speaker": "agent",
+      "start_ms": 12653,
+      "end_ms": 13921,
+      "text": "And your date of birth?",
+      "spoken_text": "And your date of birth?",
+      "voice": "Daniel"
+    },
+    {
+      "idx": 5,
+      "speaker": "customer",
+      "start_ms": 14181,
+      "end_ms": 16742,
+      "text": "1102-1975.",
+      "spoken_text": "1 1 0 2 1 9 7 5.",
+      "voice": "Moira"
+    },
+    {
+      "idx": 6,
+      "speaker": "agent",
+      "start_ms": 17002,
+      "end_ms": 21371,
+      "text": "Thanks. I see the charge \u2014 forty-two dollars at a gas station.",
+      "spoken_text": "Thanks. I see the charge \u2014 forty two dollars at a gas station.",
+      "voice": "Daniel"
+    },
+    {
+      "idx": 7,
+      "speaker": "customer",
+      "start_ms": 21631,
+      "end_ms": 23889,
+      "text": "I wasn't in that state last Tuesday.",
+      "spoken_text": "I wasn't in that state last Tuesday.",
+      "voice": "Moira"
+    },
+    {
+      "idx": 8,
+      "speaker": "agent",
+      "start_ms": 24149,
+      "end_ms": 27623,
+      "text": "I'll open a dispute. You'll hear back in ten business days.",
+      "spoken_text": "I'll open a dispute. You'll hear back in ten business days.",
+      "voice": "Daniel"
+    },
+    {
+      "idx": 9,
+      "speaker": "customer",
+      "start_ms": 27883,
+      "end_ms": 28573,
+      "text": "Alright.",
+      "spoken_text": "Alright.",
+      "voice": "Moira"
+    }
+  ]
+}

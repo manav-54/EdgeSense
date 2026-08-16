@@ -1,0 +1,83 @@
+{
+  "call_id": "gold-compliance_pci_full_readback-v1",
+  "audio": "gold-compliance_pci_full_readback-v1.wav",
+  "sample_rate": 16000,
+  "duration_ms": 34888,
+  "backend": "macos-say",
+  "peak_dbfs": -3.5,
+  "agent_id": "agent_02",
+  "turns": [
+    {
+      "idx": 0,
+      "speaker": "agent",
+      "start_ms": 300,
+      "end_ms": 10732,
+      "text": "Thanks for calling Northwind Financial, my name is Nadia. Just so you know, this call is recorded for quality and training. How can I help?",
+      "spoken_text": "Thanks for calling Northwind Financial, my name is Nadia. Just so you know, this call is recorded for quality and training. How can I help?",
+      "voice": "Fred"
+    },
+    {
+      "idx": 1,
+      "speaker": "customer",
+      "start_ms": 10992,
+      "end_ms": 13156,
+      "text": "I want to make a payment over the phone.",
+      "spoken_text": "I want to make a payment over the phone.",
+      "voice": "Moira"
+    },
+    {
+      "idx": 2,
+      "speaker": "agent",
+      "start_ms": 13416,
+      "end_ms": 17626,
+      "text": "Happy to take that. Go ahead and read me the full card number.",
+      "spoken_text": "Happy to take that. Go ahead and read me the full card number.",
+      "voice": "Fred"
+    },
+    {
+      "idx": 3,
+      "speaker": "customer",
+      "start_ms": 17886,
+      "end_ms": 22196,
+      "text": "It's 6011-1111-1111-1117.",
+      "spoken_text": "It's 6 0 1 1 1 1 1 1 1 1 1 1 1 1 1 7.",
+      "voice": "Moira"
+    },
+    {
+      "idx": 4,
+      "speaker": "agent",
+      "start_ms": 22456,
+      "end_ms": 29099,
+      "text": "Let me read that back to me to confirm \u2014 6011 1111 1111 1117.",
+      "spoken_text": "Let me read that back to me to confirm \u2014 6 0 1 1 1 1 1 1 1 1 1 1 1 1 1 7.",
+      "voice": "Fred"
+    },
+    {
+      "idx": 5,
+      "speaker": "customer",
+      "start_ms": 29359,
+      "end_ms": 30069,
+      "text": "That's right.",
+      "spoken_text": "That's right.",
+      "voice": "Moira"
+    },
+    {
+      "idx": 6,
+      "speaker": "agent",
+      "start_ms": 30329,
+      "end_ms": 33188,
+      "text": "Payment of three hundred dollars is authorised.",
+      "spoken_text": "Payment of three hundred dollars is authorised.",
+      "voice": "Fred"
+    },
+    {
+      "idx": 7,
+      "speaker": "customer",
+      "start_ms": 33448,
+      "end_ms": 34228,
+      "text": "Thanks.",
+      "spoken_text": "Thanks.",
+      "voice": "Moira"
+    }
+  ]
+}

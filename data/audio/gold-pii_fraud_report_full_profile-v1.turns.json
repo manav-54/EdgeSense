@@ -1,0 +1,119 @@
+{
+  "call_id": "gold-pii_fraud_report_full_profile-v1",
+  "audio": "gold-pii_fraud_report_full_profile-v1.wav",
+  "sample_rate": 16000,
+  "duration_ms": 68068,
+  "backend": "macos-say",
+  "peak_dbfs": -0.2,
+  "agent_id": "agent_04",
+  "turns": [
+    {
+      "idx": 0,
+      "speaker": "agent",
+      "start_ms": 300,
+      "end_ms": 9275,
+      "text": "Thanks for calling Northwind Financial, my name is Imani. Just so you know, this call is recorded for quality and training. How can I help?",
+      "spoken_text": "Thanks for calling Northwind Financial, my name is Imani. Just so you know, this call is recorded for quality and training. How can I help?",
+      "voice": "Daniel"
+    },
+    {
+      "idx": 1,
+      "speaker": "customer",
+      "start_ms": 9535,
+      "end_ms": 13819,
+      "text": "There are charges on my account I didn't make. This is Tobenna Okonkwo.",
+      "spoken_text": "There are charges on my account I didn't make. This is Tobenna Okonkwo.",
+      "voice": "Karen"
+    },
+    {
+      "idx": 2,
+      "speaker": "agent",
+      "start_ms": 14079,
+      "end_ms": 19655,
+      "text": "I'm sorry, let's get that locked down. Can you confirm your date of birth and the account number?",
+      "spoken_text": "I'm sorry, let's get that locked down. Can you confirm your date of birth and the account number?",
+      "voice": "Daniel"
+    },
+    {
+      "idx": 3,
+      "speaker": "customer",
+      "start_ms": 19915,
+      "end_ms": 26893,
+      "text": "Date of birth 0729 1990, account AC-77120945.",
+      "spoken_text": "Date of birth 0 7 2 9 1 9 9 0, account AC 7 7 1 2, 0 9 4 5.",
+      "voice": "Karen"
+    },
+    {
+      "idx": 4,
+      "speaker": "agent",
+      "start_ms": 27153,
+      "end_ms": 32022,
+      "text": "Thank you. I see three transactions flagged. Was the card in your possession?",
+      "spoken_text": "Thank you. I see three transactions flagged. Was the card in your possession?",
+      "voice": "Daniel"
+    },
+    {
+      "idx": 5,
+      "speaker": "customer",
+      "start_ms": 32282,
+      "end_ms": 38600,
+      "text": "Yes, it's right here. The card is 6011-1111-1111-1117.",
+      "spoken_text": "Yes, it's right here. The card is 6 0 1 1 1 1 1 1 1 1 1 1 1 1 1 7.",
+      "voice": "Karen"
+    },
+    {
+      "idx": 6,
+      "speaker": "agent",
+      "start_ms": 38860,
+      "end_ms": 43209,
+      "text": "I have the last four, that's all I need. I'm freezing the card now.",
+      "spoken_text": "I have the last four, that's all I need. I'm freezing the card now.",
+      "voice": "Daniel"
+    },
+    {
+      "idx": 7,
+      "speaker": "customer",
+      "start_ms": 43469,
+      "end_ms": 48614,
+      "text": "Also my social is 9012-3456-7 if you need it for the report.",
+      "spoken_text": "Also my social is 9 0 1 2 3 4 5 6 7 if you need it for the report.",
+      "voice": "Karen"
+    },
+    {
+      "idx": 8,
+      "speaker": "agent",
+      "start_ms": 48874,
+      "end_ms": 54788,
+      "text": "I don't need that for this. The fraud claim is filed and provisional credit posts in two business days.",
+      "spoken_text": "I don't need that for this. The fraud claim is filed and provisional credit posts in two business days.",
+      "voice": "Daniel"
+    },
+    {
+      "idx": 9,
+      "speaker": "customer",
+      "start_ms": 55048,
+      "end_ms": 59567,
+      "text": "Okay. Can you email me the confirmation at priya.nair@example.org?",
+      "spoken_text": "Okay. Can you email me the confirmation at priya.nair at example dot org?",
+      "voice": "Karen"
+    },
+    {
+      "idx": 10,
+      "speaker": "agent",
+      "start_ms": 59827,
+      "end_ms": 65423,
+      "text": "Sent. You'll also get a text at 2125 5501 77.",
+      "spoken_text": "Sent. You'll also get a text at 2 1 2 5 5 5 0 1 77.",
+      "voice": "Daniel"
+    },
+    {
+      "idx": 11,
+      "speaker": "customer",
+      "start_ms": 65683,
+      "end_ms": 67408,
+      "text": "Thank you for handling that quickly.",
+      "spoken_text": "Thank you for handling that quickly.",
+      "voice": "Karen"
+    }
+  ]
+}

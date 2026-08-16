@@ -1,0 +1,101 @@
+{
+  "call_id": "gold-adversarial_split_across_turns-v0",
+  "audio": "gold-adversarial_split_across_turns-v0.wav",
+  "sample_rate": 16000,
+  "duration_ms": 32680,
+  "backend": "macos-say",
+  "peak_dbfs": -3.5,
+  "agent_id": "agent_04",
+  "turns": [
+    {
+      "idx": 0,
+      "speaker": "agent",
+      "start_ms": 300,
+      "end_ms": 10755,
+      "text": "Thanks for calling Northwind Financial, my name is Imani. Just so you know, this call is recorded for quality and training. How can I help?",
+      "spoken_text": "Thanks for calling Northwind Financial, my name is Imani. Just so you know, this call is recorded for quality and training. How can I help?",
+      "voice": "Fred"
+    },
+    {
+      "idx": 1,
+      "speaker": "customer",
+      "start_ms": 11015,
+      "end_ms": 17111,
+      "text": "Okay, the card number, first part is 4000 0566",
+      "spoken_text": "Okay, the card number, first part is 4 0 0 0 0 5 6 6",
+      "voice": "Moira"
+    },
+    {
+      "idx": 2,
+      "speaker": "agent",
+      "start_ms": 17371,
+      "end_ms": 18110,
+      "text": "Go ahead.",
+      "spoken_text": "Go ahead.",
+      "voice": "Fred"
+    },
+    {
+      "idx": 3,
+      "speaker": "customer",
+      "start_ms": 18370,
+      "end_ms": 22016,
+      "text": "and the rest is 5566 5556.",
+      "spoken_text": "and the rest is 5 5 6 6 5 5 5 6.",
+      "voice": "Moira"
+    },
+    {
+      "idx": 4,
+      "speaker": "agent",
+      "start_ms": 22276,
+      "end_ms": 22895,
+      "text": "Got it.",
+      "spoken_text": "Got it.",
+      "voice": "Fred"
+    },
+    {
+      "idx": 5,
+      "speaker": "customer",
+      "start_ms": 23155,
+      "end_ms": 25432,
+      "text": "My social starts 912 8",
+      "spoken_text": "My social starts 9 1 2 8",
+      "voice": "Moira"
+    },
+    {
+      "idx": 6,
+      "speaker": "agent",
+      "start_ms": 25692,
+      "end_ms": 26541,
+      "text": "Mhm.",
+      "spoken_text": "Mhm.",
+      "voice": "Fred"
+    },
+    {
+      "idx": 7,
+      "speaker": "customer",
+      "start_ms": 26801,
+      "end_ms": 29068,
+      "text": "and ends 8 7766.",
+      "spoken_text": "and ends 8 7 7 6 6.",
+      "voice": "Moira"
+    },
+    {
+      "idx": 8,
+      "speaker": "agent",
+      "start_ms": 29328,
+      "end_ms": 31319,
+      "text": "Thank you, you're verified.",
+      "spoken_text": "Thank you, you're verified.",
+      "voice": "Fred"
+    },
+    {
+      "idx": 9,
+      "speaker": "customer",
+      "start_ms": 31579,
+      "end_ms": 32020,
+      "text": "Great.",
+      "spoken_text": "Great.",
+      "voice": "Moira"
+    }
+  ]
+}

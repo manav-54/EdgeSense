@@ -1,0 +1,83 @@
+{
+  "call_id": "gold-compliance_fdcpa_threat-v1",
+  "audio": "gold-compliance_fdcpa_threat-v1.wav",
+  "sample_rate": 16000,
+  "duration_ms": 32935,
+  "backend": "macos-say",
+  "peak_dbfs": -2.0,
+  "agent_id": "agent_05",
+  "turns": [
+    {
+      "idx": 0,
+      "speaker": "agent",
+      "start_ms": 300,
+      "end_ms": 10720,
+      "text": "This is Devon from Northwind Recovery. This is an attempt to collect a debt and any information obtained will be used for that purpose. This call is recorded.",
+      "spoken_text": "This is Devon from Northwind Recovery. This is an attempt to collect a debt and any information obtained will be used for that purpose. This call is recorded.",
+      "voice": "Fred"
+    },
+    {
+      "idx": 1,
+      "speaker": "customer",
+      "start_ms": 10980,
+      "end_ms": 13345,
+      "text": "I've told you people I can't pay right now.",
+      "spoken_text": "I've told you people I can't pay right now.",
+      "voice": "Samantha"
+    },
+    {
+      "idx": 2,
+      "speaker": "agent",
+      "start_ms": 13605,
+      "end_ms": 17536,
+      "text": "The balance is nineteen hundred dollars. When can you pay?",
+      "spoken_text": "The balance is nineteen hundred dollars. When can you pay?",
+      "voice": "Fred"
+    },
+    {
+      "idx": 3,
+      "speaker": "customer",
+      "start_ms": 17796,
+      "end_ms": 20334,
+      "text": "I don't know. I lost my job in March.",
+      "spoken_text": "I don't know. I lost my job in March.",
+      "voice": "Samantha"
+    },
+    {
+      "idx": 4,
+      "speaker": "agent",
+      "start_ms": 20594,
+      "end_ms": 24799,
+      "text": "If you don't pay this week we'll take you to court and garnish your wages.",
+      "spoken_text": "If you don't pay this week we'll take you to court and garnish your wages.",
+      "voice": "Fred"
+    },
+    {
+      "idx": 5,
+      "speaker": "customer",
+      "start_ms": 25059,
+      "end_ms": 27954,
+      "text": "You can't do that. I'm going to file a complaint.",
+      "spoken_text": "You can't do that. I'm going to file a complaint.",
+      "voice": "Samantha"
+    },
+    {
+      "idx": 6,
+      "speaker": "agent",
+      "start_ms": 28214,
+      "end_ms": 31007,
+      "text": "That's your right, but the balance stands.",
+      "spoken_text": "That's your right, but the balance stands.",
+      "voice": "Fred"
+    },
+    {
+      "idx": 7,
+      "speaker": "customer",
+      "start_ms": 31267,
+      "end_ms": 32275,
+      "text": "This is harassment.",
+      "spoken_text": "This is harassment.",
+      "voice": "Samantha"
+    }
+  ]
+}
