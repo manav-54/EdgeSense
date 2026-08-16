@@ -24,6 +24,7 @@ cannot express.
 
 from __future__ import annotations
 
+import re
 import uuid
 from dataclasses import dataclass
 
@@ -255,18 +256,13 @@ class LiveAnalyzer:
     # -- helpers -----------------------------------------------------------
 
     def _required_disclosures(self, state: CallState) -> list[str]:
+        """Base obligations plus any that this call's intent triggers."""
         required = list(BASE_REQUIRED)
         intent, secondary, _ = rules.classify_intent(state.all_turns())
         intents = {intent, *secondary}
         for policy in self.policies.all():
-            clause = policy.applies_when or ""
-            if not clause:
-                continue
-            listed = {
-                token.strip().strip("[]'\"")
-                for token in clause.split("in", 1)[-1].split(",")
-            }
-            if intents & listed:
+            listed = _applies_to_intents(policy.applies_when)
+            if listed and intents & listed:
                 required.append(policy.id)
         return list(dict.fromkeys(required))
 
@@ -379,6 +375,27 @@ class LiveAnalyzer:
         if signal.label != prev_label or signal.severity.value != prev_severity:
             return True
         return signal.confidence - prev_confidence >= 0.15
+
+
+#: Parses ``applies_when: intent in [collections, refund_request]``.
+#: Splitting on the literal substring "in" is wrong here in a way that is easy
+#: to miss: the word "intent" contains "in", so a naive split silently returns
+#: "tent in [collections]" and no intent-scoped policy ever applies. The bracket
+#: contents are matched directly instead.
+_APPLIES_WHEN = re.compile(r"\bintent\s+in\s*\[([^\]]*)\]", re.IGNORECASE)
+
+
+def _applies_to_intents(clause: str | None) -> set[str]:
+    if not clause:
+        return set()
+    m = _APPLIES_WHEN.search(clause)
+    if not m:
+        return set()
+    return {
+        token.strip().strip("'\"")
+        for token in m.group(1).split(",")
+        if token.strip()
+    }
 
 
 def _render(turns: list[dict]) -> str:
