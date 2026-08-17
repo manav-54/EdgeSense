@@ -1,0 +1,264 @@
+# EdgeSense local stack.
+#
+#   docker compose up -d          bring up infrastructure and services
+#   make demo                     generate real audio and stream a call through
+#
+# Service ordering is enforced with health checks rather than `depends_on`
+# alone, because Kafka and ClickHouse both accept TCP connections seconds
+# before they will accept work, and a worker that starts too early spends its
+# first minute in a retry loop.
+
+name: edgesense
+
+x-otel: &otel
+  OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
+  OTEL_SERVICE_NAMESPACE: edgesense
+  LOG_LEVEL: ${LOG_LEVEL:-info}
+
+x-kafka: &kafka
+  KAFKA_BROKERS: kafka:9092
+  TOPIC_SEGMENTS: ${TOPIC_SEGMENTS:-transcript.segments}
+  TOPIC_INSIGHTS: ${TOPIC_INSIGHTS:-call.insights}
+
+services:
+  # --------------------------------------------------------------- infra ---
+  kafka:
+    image: apache/kafka:3.9.0
+    container_name: edgesense-kafka
+    environment:
+      # KRaft single-node: no ZooKeeper. One broker is right for a laptop and
+      # wrong for anything else; DESIGN.md covers the real topology.
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_NUM_PARTITIONS: 6
+      CLUSTER_ID: edgesense-local-cluster
+    ports: ["9092:9092"]
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 12
+      start_period: 20s
+    networks: [edgesense]
+
+  redis:
+    image: redis:7-alpine
+    container_name: edgesense-redis
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    ports: ["6379:6379"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks: [edgesense]
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:24.8-alpine
+    container_name: edgesense-clickhouse
+    environment:
+      CLICKHOUSE_DB: ${CLICKHOUSE_DB:-edgesense}
+      CLICKHOUSE_USER: ${CLICKHOUSE_USER:-default}
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD:-}
+      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
+    ports: ["8123:8123", "9000:9000"]
+    ulimits:
+      nofile: { soft: 262144, hard: 262144 }
+    volumes:
+      - clickhouse-data:/var/lib/clickhouse
+      # Applied on first boot only; the sink also runs the schema idempotently
+      # so a rebuilt image on an existing volume still converges.
+      - ./deploy/clickhouse/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8123/ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    networks: [edgesense]
+
+  # ------------------------------------------------------ observability ---
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.115.1
+    container_name: edgesense-otel
+    command: ["--config=/etc/otel/collector.yaml"]
+    volumes:
+      - ./deploy/otel/collector.yaml:/etc/otel/collector.yaml:ro
+    ports: ["4317:4317", "4318:4318", "8889:8889"]
+    depends_on:
+      jaeger: { condition: service_started }
+    networks: [edgesense]
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.62
+    container_name: edgesense-jaeger
+    environment:
+      COLLECTOR_OTLP_ENABLED: "true"
+    ports: ["16686:16686"]
+    networks: [edgesense]
+
+  prometheus:
+    image: prom/prometheus:v3.0.1
+    container_name: edgesense-prometheus
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.retention.time=7d
+      - --web.enable-lifecycle
+    volumes:
+      - ./deploy/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./deploy/prometheus/rules.yml:/etc/prometheus/rules.yml:ro
+    ports: ["9090:9090"]
+    networks: [edgesense]
+
+  grafana:
+    image: grafana/grafana:11.4.0
+    container_name: edgesense-grafana
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Viewer
+      GF_INSTALL_PLUGINS: grafana-clickhouse-datasource
+    volumes:
+      - ./deploy/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./deploy/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    ports: ["3000:3000"]
+    depends_on:
+      prometheus: { condition: service_started }
+    networks: [edgesense]
+
+  kafka-exporter:
+    image: danielqsj/kafka-exporter:v1.8.0
+    container_name: edgesense-kafka-exporter
+    command: ["--kafka.server=kafka:9092"]
+    depends_on:
+      kafka: { condition: service_healthy }
+    networks: [edgesense]
+
+  # ------------------------------------------------------------ services ---
+  ingest:
+    build:
+      context: .
+      dockerfile: deploy/docker/ingest.Dockerfile
+    container_name: edgesense-ingest
+    environment:
+      <<: [*otel, *kafka]
+      INGEST_HTTP_ADDR: ":8080"
+      INGEST_METRICS_ADDR: ":9102"
+      REDIS_ADDR: redis:6379
+    ports: ["8080:8080"]
+    depends_on:
+      kafka: { condition: service_healthy }
+      redis: { condition: service_healthy }
+    restart: unless-stopped
+    networks: [edgesense]
+
+  worker:
+    build:
+      context: .
+      dockerfile: deploy/docker/worker.Dockerfile
+    container_name: edgesense-worker
+    command: ["--from-beginning"]
+    environment:
+      <<: [*otel, *kafka]
+      # Absent Azure credentials the worker runs the deterministic offline
+      # provider, so the stack works end to end with no cloud account.
+      EDGESENSE_LLM_PROVIDER: ${EDGESENSE_LLM_PROVIDER:-auto}
+      AZURE_OPENAI_ENDPOINT: ${AZURE_OPENAI_ENDPOINT:-}
+      AZURE_OPENAI_API_KEY: ${AZURE_OPENAI_API_KEY:-}
+      AZURE_OPENAI_DEPLOYMENT: ${AZURE_OPENAI_DEPLOYMENT:-}
+      AZURE_OPENAI_API_VERSION: ${AZURE_OPENAI_API_VERSION:-2024-10-21}
+      AZURE_SEARCH_ENDPOINT: ${AZURE_SEARCH_ENDPOINT:-}
+      AZURE_SEARCH_API_KEY: ${AZURE_SEARCH_API_KEY:-}
+      AZURE_SEARCH_INDEX: ${AZURE_SEARCH_INDEX:-edgesense-policies}
+      PROMPT_VERSION: ${PROMPT_VERSION:-latest}
+      WORKER_PROMETHEUS_PORT: "9103"
+    depends_on:
+      kafka: { condition: service_healthy }
+    restart: unless-stopped
+    networks: [edgesense]
+
+  sink:
+    build:
+      context: .
+      dockerfile: deploy/docker/sink.Dockerfile
+    container_name: edgesense-sink
+    command: ["--apply-schema", "--from-beginning"]
+    environment:
+      <<: [*otel, *kafka]
+      CLICKHOUSE_HOST: clickhouse
+      CLICKHOUSE_HTTP_PORT: "8123"
+      CLICKHOUSE_DB: ${CLICKHOUSE_DB:-edgesense}
+      CLICKHOUSE_USER: ${CLICKHOUSE_USER:-default}
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD:-}
+      SINK_PROMETHEUS_PORT: "9104"
+    depends_on:
+      kafka: { condition: service_healthy }
+      clickhouse: { condition: service_healthy }
+    restart: unless-stopped
+    networks: [edgesense]
+
+  # The read API shares the sink image; same code, different entrypoint.
+  api:
+    build:
+      context: .
+      dockerfile: deploy/docker/sink.Dockerfile
+    container_name: edgesense-api
+    entrypoint: ["uvicorn", "sink.api:app", "--host", "0.0.0.0", "--port", "8000"]
+    environment:
+      <<: [*otel, *kafka]
+      CLICKHOUSE_HOST: clickhouse
+      CLICKHOUSE_HTTP_PORT: "8123"
+      CLICKHOUSE_DB: ${CLICKHOUSE_DB:-edgesense}
+    ports: ["8000:8000"]
+    depends_on:
+      clickhouse: { condition: service_healthy }
+    restart: unless-stopped
+    networks: [edgesense]
+
+  portal:
+    build:
+      context: .
+      dockerfile: deploy/docker/portal.Dockerfile
+    container_name: edgesense-portal
+    ports: ["5173:80"]
+    depends_on:
+      api: { condition: service_started }
+    networks: [edgesense]
+
+  # The edge agent is not a long-running service: it represents one operator's
+  # machine and runs per call. It idles here so `make demo` can exec into it.
+  edge-agent:
+    build:
+      context: .
+      dockerfile: deploy/docker/edge.Dockerfile
+    container_name: edgesense-edge
+    entrypoint: ["sleep", "infinity"]
+    environment:
+      <<: *otel
+      INGEST_WS_URL: ws://ingest:8080/v1/stream
+      WHISPER_MODEL: ${WHISPER_MODEL:-tiny.en}
+      WHISPER_MODEL_DIR: /opt/models
+      EDGE_PROMETHEUS_PORT: "9101"
+    volumes:
+      - audio-data:/app/data/audio
+    depends_on:
+      ingest: { condition: service_started }
+    networks: [edgesense]
+
+networks:
+  edgesense:
+    driver: bridge
+
+volumes:
+  clickhouse-data:
+  audio-data:

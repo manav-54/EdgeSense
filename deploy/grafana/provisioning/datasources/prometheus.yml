@@ -1,0 +1,32 @@
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    type: prometheus
+    uid: PROM
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    jsonData:
+      timeInterval: 5s
+
+  - name: Jaeger
+    type: jaeger
+    uid: JAEGER
+    access: proxy
+    url: http://jaeger:16686
+    jsonData:
+      # Links a trace straight from a latency spike in a Prometheus panel,
+      # which is the whole reason both are here rather than one or the other.
+      tracesToLogsV2:
+        datasourceUid: PROM
+
+  - name: ClickHouse
+    type: grafana-clickhouse-datasource
+    uid: CLICKHOUSE
+    access: proxy
+    jsonData:
+      host: clickhouse
+      port: 9000
+      protocol: native
+      defaultDatabase: edgesense
