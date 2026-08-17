@@ -28,6 +28,7 @@ from __future__ import annotations
 import argparse
 import json
 import statistics
+from datetime import datetime, timezone
 import sys
 import threading
 import time
@@ -200,7 +201,7 @@ def run_level(
     live: LiveAnalyzer,
     post: PostCallAnalyzer,
     realtime: bool,
-) -> LevelResult:
+) -> tuple[LevelResult, list[CallStats]]:
     results: list[CallStats] = []
     lock = threading.Lock()
 
@@ -239,7 +240,50 @@ def run_level(
             statistics.mean([r.audio_ms for r in results]) if results else 1, 1
         ),
         errors=sum(1 for r in results if r.error),
-    )
+    ), results
+
+
+def write_latency_samples(
+    results: list[CallStats], concurrency: int, host: str, port: int
+) -> None:
+    """Persist measured stage latencies so the portal shows real numbers.
+
+    Nothing here is estimated. Each row is a timing this run actually took,
+    which is why the load test writes them rather than the corpus seeder --
+    the seeder replays calls onto a synthetic historical timeline, so its
+    wall-clock deltas would be meaningless as latency.
+    """
+    try:
+        import clickhouse_connect
+    except ImportError:
+        print("  (clickhouse-connect not installed; skipping latency write)")
+        return
+
+    rows: list[list] = []
+    now = datetime.now(timezone.utc)
+    for call in results:
+        for stage, values in (
+            ("e2e", call.e2e_ms), ("asr", call.asr_ms),
+            ("redact", call.redact_ms), ("analyze", call.analyze_ms),
+        ):
+            for i, value in enumerate(values):
+                rows.append([
+                    call.call_id, i, f"loadtest_c{concurrency}",
+                    stage, float(value), 1, now,
+                ])
+    if not rows:
+        return
+    try:
+        client = clickhouse_connect.get_client(host=host, port=port, database="edgesense")
+        client.insert(
+            "edgesense.segment_latency", rows,
+            column_names=["call_id", "seq", "agent_id", "stage",
+                          "duration_ms", "is_final", "emitted_at"],
+        )
+        client.close()
+        print(f"  wrote {len(rows)} latency samples to clickhouse")
+    except Exception as exc:
+        print(f"  (clickhouse write failed: {str(exc)[:120]})")
 
 
 def main() -> int:
@@ -255,6 +299,11 @@ def main() -> int:
     ap.add_argument("--budget-ms", type=float, default=BUDGET_MS)
     ap.add_argument("--out", type=Path, default=REPO / "eval/reports/loadtest.json")
     ap.add_argument("--model", default=None)
+    ap.add_argument("--clickhouse", action="store_true",
+                    help="Write the measured latency samples into ClickHouse, so "
+                         "the portal's latency panel shows real numbers.")
+    ap.add_argument("--ch-host", default="localhost")
+    ap.add_argument("--ch-port", type=int, default=8123)
     args = ap.parse_args()
 
     setup_logging("loadtest", "warning")
@@ -291,8 +340,12 @@ def main() -> int:
     levels: list[LevelResult] = []
     last_ok = 0
     for concurrency in args.levels:
-        result = run_level(concurrency, wavs, transcriber, live, post, args.realtime)
+        result, samples = run_level(
+            concurrency, wavs, transcriber, live, post, args.realtime
+        )
         levels.append(result)
+        if args.clickhouse:
+            write_latency_samples(samples, concurrency, args.ch_host, args.ch_port)
         verdict = "OK" if result.e2e_p95 <= args.budget_ms else "BREACH"
         print(f"{result.concurrency:>5} {result.calls:>6} {result.audio_s:>8.1f} "
               f"{result.duration_s:>7.1f} {result.e2e_p50:>8.1f} {result.e2e_p95:>8.1f} "

@@ -18,6 +18,7 @@ from __future__ import annotations
 import asyncio
 import json
 import os
+import threading
 from collections import deque
 from contextlib import asynccontextmanager
 from dataclasses import dataclass, field
@@ -84,23 +85,52 @@ hub = Hub()
 
 
 class Store:
-    """Thin ClickHouse query wrapper returning dicts."""
+    """Thin ClickHouse query wrapper returning dicts.
+
+    One client **per thread**, not one per process. FastAPI runs sync endpoints
+    in a threadpool, so the dashboard's five concurrent panel requests land on
+    five different threads at once. A clickhouse_connect client is not safe to
+    query concurrently: sharing one produced intermittent 500s that never
+    reproduced under sequential curl, only under a real browser loading the
+    whole dashboard at once.
+    """
 
     def __init__(self) -> None:
+        self._local = threading.local()
+        self._clients: list = []
+        self._lock = threading.Lock()
+        self._connect()  # fail fast at startup rather than on first request
+
+    def _connect(self):
         import clickhouse_connect
 
-        self._client = clickhouse_connect.get_client(
+        client = clickhouse_connect.get_client(
             host=CH_HOST, port=CH_PORT, database=CH_DB,
             username=CH_USER, password=CH_PASSWORD,
             connect_timeout=5, send_receive_timeout=30,
         )
+        self._local.client = client
+        with self._lock:
+            self._clients.append(client)
+        return client
+
+    @property
+    def client(self):
+        client = getattr(self._local, "client", None)
+        return client if client is not None else self._connect()
 
     def rows(self, sql: str, params: dict | None = None) -> list[dict]:
-        result = self._client.query(sql, parameters=params or {})
+        result = self.client.query(sql, parameters=params or {})
         return [dict(zip(result.column_names, row)) for row in result.result_rows]
 
     def close(self) -> None:
-        self._client.close()
+        with self._lock:
+            for client in self._clients:
+                try:
+                    client.close()
+                except Exception:
+                    pass
+            self._clients.clear()
 
 
 store: Store | None = None

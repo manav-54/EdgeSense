@@ -122,7 +122,8 @@ nav.tabs button[aria-current='page'] {
 .card > .sub { margin: 0 0 14px; font-size: 12px; color: var(--text-muted); }
 
 .grid { display: grid; gap: 16px; }
-.grid.cols-2 { grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); }
+.grid.cols-2 { grid-template-columns: repeat(auto-fit, minmax(540px, 1fr)); }
+.grid .span-2 { grid-column: 1 / -1; }
 .grid.cols-4 { grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
 
 /* stat tiles — a headline number needs no plot */

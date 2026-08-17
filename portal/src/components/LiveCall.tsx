@@ -39,10 +39,6 @@ export function LiveCall() {
   const [selected, setSelected] = useState<string | null>(null)
 
   const recent = useQuery<CallRow[]>('/api/calls?limit=25')
-  const detail = useQuery<{ signals: StoredSignal[]; summary: CallRow | null }>(
-    selected ? `/api/calls/${encodeURIComponent(selected)}` : '/api/health',
-    [selected],
-  )
 
   // Calls currently streaming, newest first.
   const liveCallIds = useMemo(() => {
@@ -54,8 +50,21 @@ export function LiveCall() {
     return seen
   }, [live.segments])
 
-  const activeCall = selected ?? liveCallIds[0] ?? null
+  // Preference order: an explicit choice, then anything streaming now, then
+  // the most recent completed call. Falling back to history matters because
+  // the common case for opening this screen is "something happened, show me"
+  // -- landing on two empty panes when 288 analysed calls are one query away
+  // makes the tool look broken rather than idle.
+  const activeCall =
+    selected ?? liveCallIds[0] ?? recent.data?.[0]?.call_id ?? null
   const isLive = activeCall !== null && liveCallIds.includes(activeCall)
+
+  const detail = useQuery<{ signals: StoredSignal[]; summary: CallRow | null }>(
+    activeCall && !isLive
+      ? `/api/calls/${encodeURIComponent(activeCall)}`
+      : '/api/health',
+    [activeCall, isLive],
+  )
 
   const segments = useMemo(
     () => live.segments.filter((segment) => segment.call_id === activeCall),

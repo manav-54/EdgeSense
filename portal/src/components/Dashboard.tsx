@@ -294,6 +294,7 @@ export function Dashboard() {
         <Card
           title="Per-agent rollup"
           subtitle="From the agent_daily aggregate. Agents with at least 3 calls in the period."
+          wide
         >
           <div className="scroll-x">
             <table className="data">

@@ -143,10 +143,17 @@ export function LatencyPanel() {
               barGap={2}
             >
               <CartesianGrid {...gridProps} horizontal={false} vertical />
+              {/* Log scale, because these stages differ by four orders of
+                  magnitude: redaction runs in ~0.3 ms and the budget line
+                  sits at 2000 ms. On a linear axis every stage that matters
+                  collapses onto the y-axis and the chart shows nothing. */}
               <XAxis
                 type="number"
+                scale="log"
                 unit=" ms"
-                domain={[0, Math.ceil(worst * 1.1)]}
+                domain={[0.1, Math.max(2400, Math.ceil(worst * 1.2))]}
+                ticks={[0.1, 1, 10, 100, 1000, 2000]}
+                allowDataOverflow
                 {...axisProps}
               />
               <YAxis type="category" dataKey="label" width={132} {...axisProps} />

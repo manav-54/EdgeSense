@@ -72,14 +72,16 @@ export function Card({
   subtitle,
   children,
   table,
+  wide,
 }: {
   title: string
   subtitle?: string
   children: ReactNode
   table?: ReactNode
+  wide?: boolean
 }) {
   return (
-    <section className="card">
+    <section className={wide ? 'card span-2' : 'card'}>
       <h2>{title}</h2>
       {subtitle && <p className="sub">{subtitle}</p>}
       {children}
