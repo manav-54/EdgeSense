@@ -263,6 +263,74 @@ def test_no_long_digit_run_survives(golden_calls):
     assert not offenders, "long digit runs survived redaction:\n" + "\n".join(offenders[:20])
 
 
+def test_partials_do_not_leak(golden_calls):
+    """Partial segments cross the network exactly like finals do.
+
+    This suite originally exercised only finals, and a real run with partials
+    enabled immediately shipped six digits of a card in a preview segment:
+    the preview path used a scratch redactor that did not inherit the
+    accumulated context, so "It's 520808." looked like an ordinary number
+    rather than the middle of a card readback.
+
+    Partials are re-derived here the same way the pipeline does it, against
+    progressively longer prefixes of each turn -- which is what an ASR
+    revising its hypothesis actually produces.
+    """
+    all_leaks = []
+    for call in golden_calls:
+        if call["category"] not in ("pii_heavy", "adversarial"):
+            continue
+        redactor = Redactor(
+            call["call_id"], RedactorConfig(allowlist=(call.get("agent_name", ""),))
+        )
+        emitted: list[str] = []
+
+        for turn in call["turns"]:
+            text = turn["text"]
+            # Growing prefixes stand in for successive ASR hypotheses.
+            for cut in range(max(1, len(text) // 3), len(text), max(6, len(text) // 6)):
+                scratch = Redactor(
+                    call["call_id"], redactor.config,
+                    ner=redactor._ner, vault=redactor.vault,
+                )
+                scratch._context_tail = redactor._context_tail
+                scratch._carry = redactor._carry
+                preview = scratch.push(text[:cut], is_final=False)
+                if preview.has_output:
+                    emitted.append(preview.text)
+
+            final = redactor.push(text, is_final=True)
+            if final.has_output:
+                emitted.append(final.text)
+
+        tail = redactor.flush()
+        if tail.has_output:
+            emitted.append(tail.text)
+
+        all_leaks.extend(
+            find_leaks(call["call_id"], " ".join(emitted), _all_pii(call))
+        )
+
+    assert not all_leaks, "PII leaked via partial segments:\n" + "\n".join(
+        str(leak) for leak in all_leaks[:20]
+    )
+
+
+def test_partial_holds_an_incomplete_number():
+    """A partial withholds a digit run rather than betting the ASR is done."""
+    redactor = Redactor("partial-test")
+    redactor.push("Let me just read it out.", is_final=True)
+
+    scratch = Redactor("partial-test", redactor.config,
+                       ner=redactor._ner, vault=redactor.vault)
+    scratch._context_tail = redactor._context_tail
+
+    partial = scratch.push("It's 520808.", is_final=False)
+    assert "520808" not in partial.text, (
+        f"partial released six digits of a card: {partial.text!r}"
+    )
+
+
 def test_split_across_segments_is_not_leaked():
     """The case that motivates the hold buffer.
 

@@ -298,6 +298,12 @@ class EdgePipeline:
             ner=self.redactor._ner,
             vault=self.redactor.vault,
         )
+        # Inherit the accumulated context. Without it the scratch redactor has
+        # no idea a card readback is in progress, so a partial carrying six
+        # digits of a PAN looks like an ordinary number and is released -- and
+        # partials cross the network exactly like finals do.
+        scratch._context_tail = self.redactor._context_tail
+        scratch._carry = self.redactor._carry
         return scratch.push(text, is_final=False)
 
 

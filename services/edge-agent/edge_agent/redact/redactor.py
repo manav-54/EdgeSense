@@ -57,6 +57,16 @@ CONTEXT_TAIL_CHARS = 240
 
 SENTENCE_END = re.compile(r"[.!?](?:\s|$)")
 
+#: An email-shaped token running to the end of the text, with no complete TLD
+#: yet. Used only for partials, where the value is still arriving.
+RE_EMAIL_IN_PROGRESS = re.compile(r"[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]*$")
+
+
+def _incomplete_email_start(text: str) -> int | None:
+    """Offset of an email that is still being spoken, or None."""
+    m = RE_EMAIL_IN_PROGRESS.search(text.rstrip())
+    return m.start() if m else None
+
 
 @dataclass(frozen=True)
 class RedactionResult:
@@ -205,7 +215,12 @@ class Redactor:
     # -- streaming ---------------------------------------------------------
 
     def _hold_point(
-        self, text: str, detections: list[Detection], context: str = ""
+        self,
+        text: str,
+        detections: list[Detection],
+        context: str = "",
+        *,
+        is_final: bool = True,
     ) -> int | None:
         """Index from which the tail of ``text`` must be withheld, if any.
 
@@ -214,9 +229,16 @@ class Redactor:
         if not self.config.hold_enabled or not text:
             return None
 
+        # An address cut mid-way is not an address to any detector. A partial
+        # ending "...email me at priya.nair@e" matches no email pattern -- the
+        # TLD has not arrived yet -- so it would ship the local part and half
+        # the domain in the clear. Hold anything that looks like an email in
+        # progress, on the same reasoning as the digit runs below.
+        email_at = _incomplete_email_start(text) if not is_final else None
+
         stream = build_digit_stream(text)
         if not len(stream):
-            return None
+            return email_at
 
         last = stream.digits[-1]
         trailing = text[last.end :]
@@ -235,10 +257,10 @@ class Redactor:
             for det in detections
         )
         if claimed:
-            return None
+            return email_at
 
         if run_len < MIN_HOLD_DIGITS or run_len >= MAX_PII_DIGITS:
-            return None
+            return email_at
 
         # Punctuation is NOT proof the number ended.
         #
@@ -257,6 +279,15 @@ class Redactor:
         identifier_context = _identifier_nearby(
             text, char_start, last.end, context
         )
+
+        # A partial is a guess the ASR will revise within about a second, so
+        # withholding a trailing number costs almost nothing and releasing one
+        # is unrecoverable. Partials therefore hold any unclaimed run and skip
+        # the heuristics below entirely -- those heuristics exist to avoid
+        # adding latency to finals, and a partial has no latency to protect.
+        if not is_final:
+            return min(x for x in (char_start, email_at) if x is not None)
+
         if SENTENCE_END.search(trailing) and not identifier_context:
             return None
 
@@ -322,7 +353,7 @@ class Redactor:
             detections = resolve(
                 self._protect_orphaned_carry(combined, carry_len, detections)
             )
-        hold_at = self._hold_point(combined, detections, extra)
+        hold_at = self._hold_point(combined, detections, extra, is_final=is_final)
 
         if hold_at is None:
             emit_src, held_src = combined, ""
