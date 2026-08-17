@@ -1,0 +1,98 @@
+# Alerting rules.
+#
+# Deliberately few. An alert that fires often enough to be ignored is worse
+# than no alert, so this covers the things that mean "stop and look": the SLO
+# is breached, data is being dropped, or the privacy guarantee is in doubt.
+
+groups:
+  - name: edgesense-slo
+    interval: 15s
+    rules:
+      - alert: SegmentToSignalP95Breached
+        expr: |
+          histogram_quantile(
+            0.95,
+            sum(rate(edgesense_segment_to_signal_seconds_bucket[5m])) by (le)
+          ) > 2
+        for: 3m
+        labels: { severity: critical }
+        annotations:
+          summary: "Segment-to-signal p95 above the 2 s budget"
+          description: >
+            Live signals are arriving too late to act on. Check worker LLM
+            latency first (edgesense_worker_llm_seconds) -- the agent path is
+            the only stage that can vary by seconds.
+
+      - alert: ConsumerLagGrowing
+        expr: sum(edgesense_worker_consumer_lag) > 5000
+        for: 5m
+        labels: { severity: warning }
+        annotations:
+          summary: "Worker is falling behind the transcript topic"
+          description: >
+            Lag above 5k messages for five minutes. Signals are being produced
+            for conversations that have already moved on.
+
+  - name: edgesense-data-loss
+    interval: 15s
+    rules:
+      - alert: FinalSegmentsShed
+        expr: increase(edgesense_ingest_backpressure_events_total{action="dropped_final"}[5m]) > 0
+        for: 0m
+        labels: { severity: critical }
+        annotations:
+          summary: "Ingest dropped a final transcript segment"
+          description: >
+            Finals are only shed after blocking past the timeout, so this means
+            Kafka has been unavailable long enough to exhaust backpressure.
+            Transcript content has been lost and cannot be recovered.
+
+      - alert: SinkBufferOverflow
+        expr: increase(edgesense_sink_rows_dropped_total[10m]) > 0
+        for: 0m
+        labels: { severity: critical }
+        annotations:
+          summary: "Sink discarded rows after buffer overflow"
+
+      - alert: PostCallSummariesFailing
+        expr: |
+          increase(edgesense_worker_summaries_total{outcome!="ok"}[15m])
+          / clamp_min(increase(edgesense_worker_summaries_total[15m]), 1) > 0.1
+        for: 10m
+        labels: { severity: warning }
+        annotations:
+          summary: "More than 10% of post-call summaries are failing validation"
+          description: >
+            The worker publishes nothing when a summary will not validate, so
+            these calls have no record. Check for a prompt or schema change.
+
+  - name: edgesense-privacy
+    interval: 15s
+    rules:
+      # Not a leak detector -- a leak cannot be observed from the cloud side,
+      # which is the entire point. This watches for the edge *stopping* work
+      # it should be doing, which is the observable shadow of a redaction bug.
+      - alert: RedactionRateCollapsed
+        expr: |
+          sum(rate(edgesense_edge_redactions_total[15m])) == 0
+          and sum(rate(edgesense_edge_segments_emitted_total[15m])) > 0.1
+        for: 15m
+        labels: { severity: critical }
+        annotations:
+          summary: "Segments are flowing but nothing is being redacted"
+          description: >
+            Either every call really is PII-free, or the redactor has been
+            disabled or is failing open. Treat as a privacy incident until
+            proven otherwise.
+
+      - alert: EdgeHoldBufferChurn
+        expr: |
+          rate(edgesense_edge_held_fragments_total[5m])
+          > 0.5 * rate(edgesense_edge_segments_emitted_total{is_final="true"}[5m])
+        for: 10m
+        labels: { severity: warning }
+        annotations:
+          summary: "More than half of final segments are triggering a hold"
+          description: >
+            Expected on card-heavy traffic; sustained otherwise it suggests the
+            ASR is fragmenting numbers and inflating latency.

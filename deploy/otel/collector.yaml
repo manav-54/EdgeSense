@@ -1,0 +1,78 @@
+# OpenTelemetry collector.
+#
+# Every service exports OTLP here so a single call_id is followable end to end:
+# the edge agent starts a trace per call, puts the W3C traceparent on each
+# segment, ingest continues it rather than starting a new one, and the worker
+# links its analysis span to the segment that triggered it.
+#
+# The attributes processor exists for a privacy reason, not a tidiness one.
+# Span attributes are the one place a well-meaning change can put transcript
+# text into a third-party backend, so anything that looks like free text is
+# dropped here rather than trusted not to appear.
+
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+processors:
+  batch:
+    timeout: 2s
+    send_batch_size: 512
+
+  memory_limiter:
+    # Ahead of the batcher, so a traffic spike sheds spans instead of pushing
+    # the collector into an OOM that takes tracing down entirely.
+    check_interval: 1s
+    limit_percentage: 75
+    spike_limit_percentage: 20
+
+  attributes/scrub:
+    actions:
+      # Belt and braces: services are not supposed to put text on spans, and
+      # this makes sure a new one that does cannot export it.
+      - key: edgesense.text
+        action: delete
+      - key: edgesense.transcript
+        action: delete
+      - key: edgesense.quote
+        action: delete
+      - key: db.statement
+        action: delete
+
+  resource:
+    attributes:
+      - key: deployment.environment
+        value: local
+        action: upsert
+
+exporters:
+  otlp/jaeger:
+    endpoint: jaeger:4317
+    tls:
+      insecure: true
+
+  prometheus:
+    endpoint: 0.0.0.0:8889
+    resource_to_telemetry_conversion:
+      enabled: true
+
+  debug:
+    verbosity: basic
+
+service:
+  telemetry:
+    logs:
+      level: warn
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, attributes/scrub, resource, batch]
+      exporters: [otlp/jaeger]
+    metrics:
+      receivers: [otlp]
+      processors: [memory_limiter, resource, batch]
+      exporters: [prometheus]

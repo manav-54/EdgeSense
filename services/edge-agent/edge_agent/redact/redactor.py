@@ -34,6 +34,7 @@ from edgesense_core.timeutil import monotonic_ms
 
 from edge_agent.redact.detectors import (
     Detection,
+    _identifier_nearby,
     build_digit_stream,
     detect_digit_stream,
     detect_emails,
@@ -103,7 +104,7 @@ class RedactorConfig:
     #: Hold trailing digit runs across segments.
     hold_enabled: bool = True
     #: Give up on a hold after this many segments and redact the fragment.
-    max_hold_segments: int = 2
+    max_hold_segments: int = 4
     ner_backend: str = "auto"
 
 
@@ -203,7 +204,9 @@ class Redactor:
 
     # -- streaming ---------------------------------------------------------
 
-    def _hold_point(self, text: str, detections: list[Detection]) -> int | None:
+    def _hold_point(
+        self, text: str, detections: list[Detection], context: str = ""
+    ) -> int | None:
         """Index from which the tail of ``text`` must be withheld, if any.
 
         Returns ``None`` when the whole segment is safe to emit.
@@ -217,29 +220,51 @@ class Redactor:
 
         last = stream.digits[-1]
         trailing = text[last.end :]
-        # A sentence ended after the number: the speaker finished saying it.
-        if SENTENCE_END.search(trailing):
-            return None
-        # Enough words followed that this is no longer an open readback.
-        if len(trailing.split()) > 4:
-            return None
 
         # Walk back to the start of the trailing contiguous run.
         run_start_idx = len(stream) - 1
         while run_start_idx > 0 and (run_start_idx not in stream.breaks):
             run_start_idx -= 1
         run_len = len(stream) - run_start_idx
-
-        if run_len < MIN_HOLD_DIGITS or run_len >= MAX_PII_DIGITS:
-            return None
-
         char_start = stream.digits[run_start_idx].start
 
         # Already fully claimed by a confident detection that ends at the run's
         # end? Then it is a complete value, not a fragment -- emit it redacted.
-        for det in detections:
-            if det.start <= char_start and det.end >= last.end and det.confidence >= 0.9:
-                return None
+        claimed = any(
+            det.start <= char_start and det.end >= last.end and det.confidence >= 0.9
+            for det in detections
+        )
+        if claimed:
+            return None
+
+        if run_len < MIN_HOLD_DIGITS or run_len >= MAX_PII_DIGITS:
+            return None
+
+        # Punctuation is NOT proof the number ended.
+        #
+        # This looked safe and was not. faster-whisper punctuates aggressively:
+        # a caller reading "4242 4242 4242 4242" comes back as four separate
+        # segments, each rendered "4242." with a full stop. Treating that stop
+        # as "the speaker finished" released all four groups in the clear, and
+        # a card read aloud in chunks was reconstructible from consecutive
+        # segments. The audio-mode eval caught it; the text-mode eval never
+        # could, because authored transcripts do not punctuate mid-number.
+        #
+        # So a terminator only releases the hold when nothing nearby suggests
+        # an identifier is being read out. With identifier context in scope, a
+        # short unclaimed run keeps waiting -- and if it never resolves, the
+        # expiry path redacts it rather than letting it go.
+        identifier_context = _identifier_nearby(
+            text, char_start, last.end, context
+        )
+        if SENTENCE_END.search(trailing) and not identifier_context:
+            return None
+
+        # Enough words followed that this is no longer an open readback.
+        if len(trailing.split()) > 4 and not identifier_context:
+            return None
+        if len(trailing.split()) > 12:
+            return None
 
         return char_start
 
@@ -297,7 +322,7 @@ class Redactor:
             detections = resolve(
                 self._protect_orphaned_carry(combined, carry_len, detections)
             )
-        hold_at = self._hold_point(combined, detections)
+        hold_at = self._hold_point(combined, detections, extra)
 
         if hold_at is None:
             emit_src, held_src = combined, ""
@@ -324,7 +349,7 @@ class Redactor:
             # A hold that never resolves must not become a leak. Flush it
             # redacted rather than releasing it.
             if self._carry and self._carry_age >= self.config.max_hold_segments:
-                forced = self.redact(self._carry, extra)
+                forced = self._redact_carry(self._carry, extra)
                 self._carry, self._carry_age = "", 0
                 joined = f"{result.text} {forced.text}".strip()
                 shift = len(result.text) + 1 if result.text else 0
@@ -346,12 +371,28 @@ class Redactor:
             latency_ms=monotonic_ms() - t0,
         )
 
+    def _redact_carry(self, carry: str, extra: str) -> RedactionResult:
+        """Redact a fragment that is being released because the hold expired.
+
+        The fragment was withheld precisely because it looked like part of a
+        secret, so releasing it raw when no detector happens to claim it turns
+        the hold into a delay rather than a protection. A four-digit tail of a
+        chunked card readback lands exactly here: too short for any length
+        rule, but the last thing that should go out in the clear.
+
+        So anything the detectors do not claim is redacted wholesale as an
+        untyped ACCOUNT before release.
+        """
+        detections = self.detect(carry, extra)
+        detections = resolve(self._protect_orphaned_carry(carry, len(carry), detections))
+        return self.redact(carry, extra, detections)
+
     def flush(self) -> StreamResult:
         """Emit whatever is still held. Called at end of call."""
         t0 = monotonic_ms()
         if not self._carry:
             return StreamResult("", (), 0, monotonic_ms() - t0)
-        result = self.redact(self._carry, self._context_tail)
+        result = self._redact_carry(self._carry, self._context_tail)
         self._carry, self._carry_age = "", 0
         return StreamResult(
             text=result.text.strip(),

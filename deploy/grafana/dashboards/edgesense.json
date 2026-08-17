@@ -1,0 +1,224 @@
+{
+  "uid": "edgesense-pipeline",
+  "title": "EdgeSense pipeline",
+  "tags": ["edgesense"],
+  "timezone": "utc",
+  "editable": true,
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "10s",
+  "time": { "from": "now-3h", "to": "now" },
+  "templating": {
+    "list": [
+      {
+        "name": "DS",
+        "type": "datasource",
+        "query": "prometheus",
+        "current": { "text": "Prometheus", "value": "Prometheus" },
+        "hide": 0
+      }
+    ]
+  },
+  "panels": [
+    {
+      "type": "row",
+      "title": "Service level",
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 }
+    },
+    {
+      "type": "timeseries",
+      "title": "Segment to signal latency (the SLO)",
+      "description": "Wall clock from a segment leaving the edge to a signal being published. The red threshold is the 2 s budget.",
+      "datasource": { "type": "prometheus", "uid": "${DS}" },
+      "gridPos": { "h": 9, "w": 16, "x": 0, "y": 1 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "custom": { "lineWidth": 2, "fillOpacity": 6, "showPoints": "never" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "red", "value": 2 }
+            ]
+          }
+        }
+      },
+      "options": { "legend": { "displayMode": "list", "placement": "bottom" } },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.50, sum(rate(edgesense_segment_to_signal_seconds_bucket[5m])) by (le))",
+          "legendFormat": "p50"
+        },
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(edgesense_segment_to_signal_seconds_bucket[5m])) by (le))",
+          "legendFormat": "p95"
+        },
+        {
+          "expr": "histogram_quantile(0.99, sum(rate(edgesense_segment_to_signal_seconds_bucket[5m])) by (le))",
+          "legendFormat": "p99"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Budget headroom",
+      "description": "p95 as a fraction of the 2 s budget. Above 100% means the SLO is breached.",
+      "datasource": { "type": "prometheus", "uid": "${DS}" },
+      "gridPos": { "h": 9, "w": 8, "x": 16, "y": 1 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "#EAB839", "value": 0.75 },
+              { "color": "red", "value": 1 }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(edgesense_segment_to_signal_seconds_bucket[5m])) by (le)) / 2",
+          "legendFormat": "p95 / budget"
+        }
+      ]
+    },
+    {
+      "type": "row",
+      "title": "Throughput",
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 10 }
+    },
+    {
+      "type": "timeseries",
+      "title": "Pipeline throughput",
+      "description": "Segments and signals per second at each stage. A gap between ingest-received and worker-consumed is the queue filling.",
+      "datasource": { "type": "prometheus", "uid": "${DS}" },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 11 },
+      "fieldConfig": { "defaults": { "unit": "reqps", "custom": { "lineWidth": 2, "fillOpacity": 4 } } },
+      "targets": [
+        { "expr": "sum(rate(edgesense_edge_segments_emitted_total[1m]))", "legendFormat": "edge emitted" },
+        { "expr": "sum(rate(edgesense_ingest_segments_received_total[1m]))", "legendFormat": "ingest received" },
+        { "expr": "sum(rate(edgesense_ingest_segments_published_total[1m]))", "legendFormat": "published to kafka" },
+        { "expr": "sum(rate(edgesense_worker_segments_consumed_total[1m]))", "legendFormat": "worker consumed" },
+        { "expr": "sum(rate(edgesense_worker_signals_emitted_total[1m]))", "legendFormat": "signals emitted" },
+        { "expr": "sum(rate(edgesense_sink_rows_written_total[1m]))", "legendFormat": "rows written" }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Consumer lag",
+      "description": "Messages behind the log head. Sustained growth means the worker cannot keep up with the offered load.",
+      "datasource": { "type": "prometheus", "uid": "${DS}" },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 11 },
+      "fieldConfig": { "defaults": { "unit": "short", "custom": { "lineWidth": 2, "fillOpacity": 10 } } },
+      "targets": [
+        { "expr": "sum by (topic) (edgesense_worker_consumer_lag)", "legendFormat": "worker {{topic}}" },
+        { "expr": "sum by (topic) (edgesense_sink_consumer_lag)", "legendFormat": "sink {{topic}}" }
+      ]
+    },
+    {
+      "type": "row",
+      "title": "Stage latency",
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 19 }
+    },
+    {
+      "type": "timeseries",
+      "title": "p95 by stage",
+      "description": "Where the budget is actually spent. ASR normally dominates; a spike in llm means the provider is throttling.",
+      "datasource": { "type": "prometheus", "uid": "${DS}" },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 20 },
+      "fieldConfig": { "defaults": { "unit": "s", "custom": { "lineWidth": 2 } } },
+      "targets": [
+        { "expr": "histogram_quantile(0.95, sum(rate(edgesense_edge_asr_seconds_bucket[5m])) by (le))", "legendFormat": "asr" },
+        { "expr": "histogram_quantile(0.95, sum(rate(edgesense_edge_redact_seconds_bucket[5m])) by (le))", "legendFormat": "redact" },
+        { "expr": "histogram_quantile(0.95, sum(rate(edgesense_ingest_handle_seconds_bucket[5m])) by (le))", "legendFormat": "ingest" },
+        { "expr": "histogram_quantile(0.95, sum(rate(edgesense_ingest_publish_seconds_bucket[5m])) by (le))", "legendFormat": "kafka publish" },
+        { "expr": "histogram_quantile(0.95, sum(rate(edgesense_worker_analysis_seconds_bucket[5m])) by (le, path))", "legendFormat": "analysis {{path}}" },
+        { "expr": "histogram_quantile(0.95, sum(rate(edgesense_worker_llm_seconds_bucket[5m])) by (le))", "legendFormat": "llm" }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Backpressure and errors",
+      "description": "Anything non-zero here is load shedding or failure, not normal operation.",
+      "datasource": { "type": "prometheus", "uid": "${DS}" },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 20 },
+      "fieldConfig": { "defaults": { "unit": "cps", "custom": { "lineWidth": 2, "fillOpacity": 8 } } },
+      "targets": [
+        { "expr": "sum by (action) (rate(edgesense_ingest_backpressure_events_total[5m]))", "legendFormat": "backpressure {{action}}" },
+        { "expr": "sum by (reason) (rate(edgesense_ingest_segments_rejected_total[5m]))", "legendFormat": "rejected {{reason}}" },
+        { "expr": "sum(rate(edgesense_ingest_publish_errors_total[5m]))", "legendFormat": "kafka errors" },
+        { "expr": "sum(rate(edgesense_sink_write_errors_total[5m]))", "legendFormat": "clickhouse errors" },
+        { "expr": "sum by (kind) (rate(edgesense_worker_llm_errors_total[5m]))", "legendFormat": "llm {{kind}}" }
+      ]
+    },
+    {
+      "type": "row",
+      "title": "LLM spend and agent behaviour",
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 28 }
+    },
+    {
+      "type": "timeseries",
+      "title": "Token spend per call",
+      "description": "Tokens divided by completed calls. This is the number that decides whether the agent loop is affordable at volume.",
+      "datasource": { "type": "prometheus", "uid": "${DS}" },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 29 },
+      "fieldConfig": { "defaults": { "unit": "short", "custom": { "lineWidth": 2 } } },
+      "targets": [
+        {
+          "expr": "sum(rate(edgesense_worker_llm_tokens_total[10m])) / clamp_min(sum(rate(edgesense_worker_summaries_total[10m])), 0.001)",
+          "legendFormat": "tokens / call"
+        },
+        {
+          "expr": "sum by (direction) (rate(edgesense_worker_llm_tokens_total[10m])) / clamp_min(sum(rate(edgesense_worker_summaries_total[10m])), 0.001)",
+          "legendFormat": "{{direction}} / call"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Tool calls and rejected findings",
+      "description": "flag_risk errors are the agent trying to raise an unsourced claim and being refused. A rise means the model is drifting.",
+      "datasource": { "type": "prometheus", "uid": "${DS}" },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 29 },
+      "fieldConfig": { "defaults": { "unit": "cps", "custom": { "lineWidth": 2 } } },
+      "targets": [
+        { "expr": "sum by (tool) (rate(edgesense_worker_tool_calls_total{outcome=\"ok\"}[5m]))", "legendFormat": "{{tool}} ok" },
+        { "expr": "sum by (tool) (rate(edgesense_worker_tool_calls_total{outcome=\"error\"}[5m]))", "legendFormat": "{{tool}} error" },
+        { "expr": "sum by (reason) (rate(edgesense_worker_signals_rejected_total[5m]))", "legendFormat": "signal rejected {{reason}}" },
+        { "expr": "sum(rate(edgesense_worker_schema_retries_total[5m]))", "legendFormat": "schema repairs" }
+      ]
+    },
+    {
+      "type": "row",
+      "title": "Privacy",
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 37 }
+    },
+    {
+      "type": "timeseries",
+      "title": "Redactions by type",
+      "description": "Counts only. Values never reach this system, by construction -- a flat line at zero while calls flow is the alert condition.",
+      "datasource": { "type": "prometheus", "uid": "${DS}" },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 38 },
+      "fieldConfig": { "defaults": { "unit": "cps", "custom": { "lineWidth": 2, "fillOpacity": 8, "stacking": { "mode": "normal" } } } },
+      "targets": [
+        { "expr": "sum by (pii_type) (rate(edgesense_edge_redactions_total[5m]))", "legendFormat": "{{pii_type}}" }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Detector mix and hold buffer",
+      "description": "A shift from regex+checksum towards context means the ASR is degrading digits and the recall bias is carrying more weight.",
+      "datasource": { "type": "prometheus", "uid": "${DS}" },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 38 },
+      "fieldConfig": { "defaults": { "unit": "cps", "custom": { "lineWidth": 2 } } },
+      "targets": [
+        { "expr": "sum by (detector) (rate(edgesense_edge_redactions_total[5m]))", "legendFormat": "{{detector}}" },
+        { "expr": "sum(rate(edgesense_edge_held_fragments_total[5m]))", "legendFormat": "fragments held" }
+      ]
+    }
+  ]
+}
