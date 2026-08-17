@@ -39,10 +39,14 @@ class OfflineProvider:
     def __init__(self) -> None:
         self._ctx: ToolContext | None = None
         self._required: list[str] = []
+        self._flagged_yet = False
 
     def set_context(self, ctx: ToolContext, required_disclosures: list[str] | None = None) -> None:
         self._ctx = ctx
         self._required = list(required_disclosures or [])
+        # Each analysis pass is a fresh conversation, so the once-only flag
+        # guard resets with the context rather than persisting across calls.
+        self._flagged_yet = False
 
     # -- protocol ----------------------------------------------------------
 
@@ -74,9 +78,13 @@ class OfflineProvider:
                                   finish_reason="tool_calls")
             step = 1  # nothing to look up; fall through to flagging
 
-        if step == 1:
+        # Flag once. Without this guard the provider re-derives the same
+        # findings on every step until max_steps, which the dedupe absorbs but
+        # which wastes three quarters of the loop's budget.
+        if step >= 1 and not self._flagged_yet:
             calls = self._flag_calls(is_post_call)
             if calls:
+                self._flagged_yet = True
                 return Completion(content="", tool_calls=calls, model=self.model,
                                   latency_ms=monotonic_ms() - t0,
                                   finish_reason="tool_calls")
