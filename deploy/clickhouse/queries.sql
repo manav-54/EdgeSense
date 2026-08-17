@@ -86,14 +86,18 @@ ORDER BY violation_rate_pct DESC;
 -- primary_intent is third in the sort key, so this still scans the date range,
 -- but LowCardinality keeps the GROUP BY cheap and the column compresses to
 -- almost nothing.
+-- Note the alias names: `AS escalated` would shadow the `escalated` column,
+-- so the next expression's countIf(escalated = 1) would resolve to the alias
+-- -- an aggregate inside an aggregate, which ClickHouse rejects with
+-- ILLEGAL_AGGREGATION. Aliases here deliberately differ from column names.
 SELECT
     primary_intent,
-    count()                                                  AS calls,
-    round(100 * count() / sum(count()) OVER (), 2)           AS share_pct,
-    countIf(escalated = 1)                                   AS escalated,
-    round(100 * countIf(escalated = 1) / count(), 2)         AS escalation_rate_pct,
+    count()                                                    AS calls,
+    round(100 * count() / sum(count()) OVER (), 2)             AS share_pct,
+    countIf(escalated = 1)                                     AS escalated_calls,
+    round(100 * countIf(escalated = 1) / count(), 2)           AS escalation_rate_pct,
     round(100 * countIf(resolution = 'resolved') / count(), 2) AS resolved_pct,
-    round(avg(turn_count), 1)                                AS avg_turns
+    round(avg(turn_count), 1)                                  AS avg_turns
 FROM edgesense.call_summaries
 WHERE ended_date >= today() - 30
 GROUP BY primary_intent
@@ -106,20 +110,24 @@ ORDER BY calls DESC;
 -- Merging pre-aggregated states is roughly an order of magnitude less work
 -- than re-reading every call row, and the states stay re-bucketable because
 -- they are states rather than pre-computed averages.
+-- Same aliasing rule as Q3, with a sharper failure: `uniqMerge(calls) AS
+-- calls` makes the later uniqMerge(calls) see a UInt64 instead of an
+-- aggregate state, which fails with ILLEGAL_TYPE_OF_ARGUMENT rather than
+-- returning something subtly wrong.
 SELECT
     agent_id,
-    uniqMerge(calls)                                            AS calls,
-    sum(escalations)                                            AS escalations,
-    round(100 * sum(escalations) / uniqMerge(calls), 2)         AS escalation_rate_pct,
-    sum(violations)                                             AS violations,
-    round(100 * sum(resolved) / uniqMerge(calls), 2)            AS resolved_pct,
-    round(avgMerge(avg_sentiment_delta), 3)                     AS avg_sentiment_delta,
-    round(avgMerge(avg_turns), 1)                               AS avg_turns
+    uniqMerge(calls)                                    AS call_count,
+    sum(escalations)                                    AS escalation_count,
+    round(100 * sum(escalations) / uniqMerge(calls), 2) AS escalation_rate_pct,
+    sum(violations)                                     AS violation_count,
+    round(100 * sum(resolved) / uniqMerge(calls), 2)    AS resolved_pct,
+    round(avgMerge(avg_sentiment_delta), 3)             AS sentiment_delta,
+    round(avgMerge(avg_turns), 1)                       AS turns_per_call
 FROM edgesense.agent_daily
 WHERE day >= today() - 30
 GROUP BY agent_id
-HAVING calls >= 3
-ORDER BY escalation_rate_pct DESC, violations DESC;
+HAVING call_count >= 3
+ORDER BY escalation_rate_pct DESC, violation_count DESC;
 
 -- ===========================================================================
 -- Q5. Pipeline latency percentiles -- the p50/p95/p99 panel.
