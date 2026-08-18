@@ -1,0 +1,40 @@
+{
+  "budget_ms": 2000.0,
+  "mode": "local",
+  "realtime": true,
+  "distinct_calls": 8,
+  "model": "tiny.en",
+  "max_sustained_concurrent_calls": 16,
+  "levels": [
+    {
+      "concurrency": 8,
+      "calls": 8,
+      "duration_s": 43.14,
+      "audio_s": 305.2,
+      "e2e_p50_ms": 161.4,
+      "e2e_p95_ms": 331.3,
+      "e2e_p99_ms": 504.1,
+      "asr_p95_ms": 469.9,
+      "redact_p95_ms": 5.5,
+      "analyze_p95_ms": 0.5,
+      "realtime_factor": 1.1309,
+      "errors": 0,
+      "within_budget": true
+    },
+    {
+      "concurrency": 16,
+      "calls": 16,
+      "duration_s": 43.9,
+      "audio_s": 610.3,
+      "e2e_p50_ms": 271.6,
+      "e2e_p95_ms": 1415.9,
+      "e2e_p99_ms": 1590.5,
+      "asr_p95_ms": 1300.9,
+      "redact_p95_ms": 5.2,
+      "analyze_p95_ms": 0.5,
+      "realtime_factor": 1.1508,
+      "errors": 0,
+      "within_budget": true
+    }
+  ]
+}

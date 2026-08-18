@@ -1,0 +1,1024 @@
+{
+  "config": {
+    "mode": "text",
+    "provider": "offline",
+    "model": "edgesense-rules-v1",
+    "live_prompt": "v1",
+    "post_prompt": "latest",
+    "ner_backend": "auto",
+    "use_agent": true,
+    "calls": 48,
+    "categories": "all"
+  },
+  "started_at": "2026-08-17T03:18:00Z",
+  "duration_s": 8.88,
+  "timings": {
+    "redact_ms_mean": 2.499,
+    "redact_ms_p95": 4.219,
+    "analysis_ms_mean": 0.303,
+    "analysis_ms_p95": 0.415,
+    "post_call_ms_mean": 0.362,
+    "post_call_ms_p95": 0.485
+  },
+  "redaction": {
+    "spans_total": 109,
+    "overall": {
+      "tp": 107,
+      "fp": 5,
+      "fn": 2,
+      "support": 109,
+      "precision": 0.9554,
+      "recall": 0.9817,
+      "f1": 0.9683,
+      "f2": 0.9763
+    },
+    "leak_count": 0,
+    "leak_rate": 0.0,
+    "type_correct": 78,
+    "type_confused": 29,
+    "type_accuracy": 0.729,
+    "by_type": {
+      "ACCOUNT": {
+        "tp": 14,
+        "fp": 1,
+        "fn": 0,
+        "support": 14,
+        "precision": 0.9333,
+        "recall": 1.0,
+        "f1": 0.9655,
+        "f2": 0.9859
+      },
+      "ADDRESS": {
+        "tp": 4,
+        "fp": 1,
+        "fn": 0,
+        "support": 4,
+        "precision": 0.8,
+        "recall": 1.0,
+        "f1": 0.8889,
+        "f2": 0.9524
+      },
+      "CARD": {
+        "tp": 26,
+        "fp": 1,
+        "fn": 0,
+        "support": 26,
+        "precision": 0.963,
+        "recall": 1.0,
+        "f1": 0.9811,
+        "f2": 0.9924
+      },
+      "DOB": {
+        "tp": 18,
+        "fp": 0,
+        "fn": 0,
+        "support": 18,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "f2": 1.0
+      },
+      "EMAIL": {
+        "tp": 10,
+        "fp": 0,
+        "fn": 0,
+        "support": 10,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "f2": 1.0
+      },
+      "PERSON": {
+        "tp": 11,
+        "fp": 2,
+        "fn": 0,
+        "support": 11,
+        "precision": 0.8462,
+        "recall": 1.0,
+        "f1": 0.9167,
+        "f2": 0.9649
+      },
+      "PHONE": {
+        "tp": 14,
+        "fp": 0,
+        "fn": 0,
+        "support": 14,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "f2": 1.0
+      },
+      "SSN": {
+        "tp": 10,
+        "fp": 0,
+        "fn": 2,
+        "support": 12,
+        "precision": 1.0,
+        "recall": 0.8333,
+        "f1": 0.9091,
+        "f2": 0.8621
+      }
+    },
+    "by_surface_form": {
+      "hyphenated": {
+        "tp": 30,
+        "fp": 0,
+        "fn": 0,
+        "support": 30,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "f2": 1.0
+      },
+      "noisy": {
+        "tp": 14,
+        "fp": 0,
+        "fn": 0,
+        "support": 14,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "f2": 1.0
+      },
+      "paired": {
+        "tp": 10,
+        "fp": 0,
+        "fn": 0,
+        "support": 10,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "f2": 1.0
+      },
+      "plain": {
+        "tp": 16,
+        "fp": 0,
+        "fn": 0,
+        "support": 16,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "f2": 1.0
+      },
+      "spaced": {
+        "tp": 29,
+        "fp": 0,
+        "fn": 2,
+        "support": 31,
+        "precision": 1.0,
+        "recall": 0.9355,
+        "f1": 0.9667,
+        "f2": 0.9477
+      },
+      "spelled": {
+        "tp": 8,
+        "fp": 0,
+        "fn": 0,
+        "support": 8,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "f2": 1.0
+      }
+    },
+    "by_category": {
+      "adversarial": {
+        "tp": 40,
+        "fp": 0,
+        "fn": 2,
+        "support": 42,
+        "precision": 1.0,
+        "recall": 0.9524,
+        "f1": 0.9756,
+        "f2": 0.9615
+      },
+      "ambiguous": {
+        "tp": 2,
+        "fp": 0,
+        "fn": 0,
+        "support": 2,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "f2": 1.0
+      },
+      "clean": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "support": 1,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "f2": 1.0
+      },
+      "compliance": {
+        "tp": 10,
+        "fp": 0,
+        "fn": 0,
+        "support": 10,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "f2": 1.0
+      },
+      "pii_heavy": {
+        "tp": 54,
+        "fp": 0,
+        "fn": 0,
+        "support": 54,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "f2": 1.0
+      }
+    },
+    "by_detector": {
+      "context": 56,
+      "ner": 11,
+      "regex": 16,
+      "regex+checksum": 24
+    },
+    "false_positives": 5,
+    "fp_examples": [
+      "gold-adversarial_mixed_forms_one_call-v0 turn 7: <PERSON> over 'Email'",
+      "gold-adversarial_mixed_forms_one_call-v1 turn 7: <PERSON> over 'Email'",
+      "gold-ambiguous_near_miss_numbers-v0 turn 1: <CARD> over '9999 8888 7777 6666'",
+      "gold-ambiguous_near_miss_numbers-v0 turn 5: <ACCOUNT> over 'one two three four five six'",
+      "gold-clean_general_inquiry_hours-v0 turn 1: <ADDRESS> over 'the Fenwick Road'"
+    ],
+    "leaks": []
+  },
+  "classification": {
+    "intent": {
+      "accuracy": 0.8333,
+      "correct": 40,
+      "total": 48,
+      "top_confusions": {
+        "payment_arrangement -> general_inquiry": 4,
+        "billing_dispute -> refund_request": 2,
+        "fraud_report -> billing_dispute": 2
+      }
+    },
+    "resolution": {
+      "accuracy": 0.6042,
+      "correct": 29,
+      "total": 48,
+      "top_confusions": {
+        "resolved -> unresolved": 14,
+        "resolved -> follow_up_required": 2,
+        "follow_up_required -> unresolved": 1,
+        "escalated -> follow_up_required": 1,
+        "escalated -> unresolved": 1
+      }
+    },
+    "escalation_risk_band": {
+      "accuracy": 0.5625,
+      "correct": 27,
+      "total": 48,
+      "top_confusions": {
+        "low -> none": 12,
+        "medium -> none": 5,
+        "none -> low": 2,
+        "low -> medium": 1,
+        "high -> none": 1
+      }
+    },
+    "escalated_flag": {
+      "tp": 1,
+      "fp": 0,
+      "fn": 2,
+      "support": 3,
+      "precision": 1.0,
+      "recall": 0.3333,
+      "f1": 0.5,
+      "f2": 0.3846
+    },
+    "compliance_violations": {
+      "tp": 20,
+      "fp": 5,
+      "fn": 0,
+      "support": 20,
+      "precision": 0.8,
+      "recall": 1.0,
+      "f1": 0.8889,
+      "f2": 0.9524
+    },
+    "violations_by_policy": {
+      "FDCPA-006": {
+        "tp": 2,
+        "fp": 0,
+        "fn": 0,
+        "support": 2,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "f2": 1.0
+      },
+      "MINI-003": {
+        "tp": 2,
+        "fp": 0,
+        "fn": 0,
+        "support": 2,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "f2": 1.0
+      },
+      "PCI-002": {
+        "tp": 4,
+        "fp": 0,
+        "fn": 0,
+        "support": 4,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "f2": 1.0
+      },
+      "PROHIB-005": {
+        "tp": 4,
+        "fp": 0,
+        "fn": 0,
+        "support": 4,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "f2": 1.0
+      },
+      "REC-001": {
+        "tp": 4,
+        "fp": 0,
+        "fn": 0,
+        "support": 4,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "f2": 1.0
+      },
+      "RTC-007": {
+        "tp": 2,
+        "fp": 0,
+        "fn": 0,
+        "support": 2,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "f2": 1.0
+      },
+      "VERIF-004": {
+        "tp": 2,
+        "fp": 5,
+        "fn": 0,
+        "support": 2,
+        "precision": 0.2857,
+        "recall": 1.0,
+        "f1": 0.4444,
+        "f2": 0.6667
+      }
+    },
+    "disclosures_given": {
+      "tp": 50,
+      "fp": 0,
+      "fn": 0,
+      "support": 50,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "f2": 1.0
+    },
+    "sentiment": {
+      "direction_accuracy": 0.875,
+      "mean_abs_error": 0.3059,
+      "samples": 48
+    },
+    "summary_quality": {
+      "schema_valid_rate": 1.0,
+      "attempted": 48,
+      "valid": 48,
+      "needed_repair": 0,
+      "citation_validity": 1.0,
+      "citations_checked": 141,
+      "action_items_produced": 29,
+      "action_items_grounded": 29,
+      "action_item_recall_vs_labels": 0.3095,
+      "bad_citation_examples": []
+    },
+    "signals": {
+      "total": 109,
+      "without_evidence": 0,
+      "evidence_rate": 1.0
+    }
+  },
+  "per_call": [
+    {
+      "call_id": "gold-adversarial_mixed_forms_one_call-v0",
+      "category": "adversarial",
+      "turns": 9,
+      "signals": 0,
+      "summary_ok": true,
+      "expected_intent": "general_inquiry",
+      "actual_intent": "general_inquiry",
+      "expected_violations": [],
+      "actual_violations": []
+    },
+    {
+      "call_id": "gold-adversarial_mixed_forms_one_call-v1",
+      "category": "adversarial",
+      "turns": 9,
+      "signals": 0,
+      "summary_ok": true,
+      "expected_intent": "general_inquiry",
+      "actual_intent": "general_inquiry",
+      "expected_violations": [],
+      "actual_violations": []
+    },
+    {
+      "call_id": "gold-adversarial_noisy_disfluent-v0",
+      "category": "adversarial",
+      "turns": 9,
+      "signals": 0,
+      "summary_ok": true,
+      "expected_intent": "general_inquiry",
+      "actual_intent": "general_inquiry",
+      "expected_violations": [],
+      "actual_violations": []
+    },
+    {
+      "call_id": "gold-adversarial_noisy_disfluent-v1",
+      "category": "adversarial",
+      "turns": 9,
+      "signals": 0,
+      "summary_ok": true,
+      "expected_intent": "general_inquiry",
+      "actual_intent": "general_inquiry",
+      "expected_violations": [],
+      "actual_violations": []
+    },
+    {
+      "call_id": "gold-adversarial_paired_digits-v0",
+      "category": "adversarial",
+      "turns": 8,
+      "signals": 0,
+      "summary_ok": true,
+      "expected_intent": "payment_arrangement",
+      "actual_intent": "general_inquiry",
+      "expected_violations": [],
+      "actual_violations": []
+    },
+    {
+      "call_id": "gold-adversarial_paired_digits-v1",
+      "category": "adversarial",
+      "turns": 8,
+      "signals": 0,
+      "summary_ok": true,
+      "expected_intent": "payment_arrangement",
+      "actual_intent": "general_inquiry",
+      "expected_violations": [],
+      "actual_violations": []
+    },
+    {
+      "call_id": "gold-adversarial_pii_near_policy_violation-v0",
+      "category": "adversarial",
+      "turns": 9,
+      "signals": 4,
+      "summary_ok": true,
+      "expected_intent": "payment_arrangement",
+      "actual_intent": "payment_arrangement",
+      "expected_violations": [
+        "REC-001",
+        "PCI-002",
+        "PROHIB-005"
+      ],
+      "actual_violations": [
+        "PCI-002",
+        "PROHIB-005",
+        "REC-001"
+      ]
+    },
+    {
+      "call_id": "gold-adversarial_pii_near_policy_violation-v1",
+      "category": "adversarial",
+      "turns": 9,
+      "signals": 4,
+      "summary_ok": true,
+      "expected_intent": "payment_arrangement",
+      "actual_intent": "payment_arrangement",
+      "expected_violations": [
+        "REC-001",
+        "PCI-002",
+        "PROHIB-005"
+      ],
+      "actual_violations": [
+        "PCI-002",
+        "PROHIB-005",
+        "REC-001"
+      ]
+    },
+    {
+      "call_id": "gold-adversarial_spelled_card-v0",
+      "category": "adversarial",
+      "turns": 8,
+      "signals": 1,
+      "summary_ok": true,
+      "expected_intent": "payment_arrangement",
+      "actual_intent": "payment_arrangement",
+      "expected_violations": [],
+      "actual_violations": []
+    },
+    {
+      "call_id": "gold-adversarial_spelled_card-v1",
+      "category": "adversarial",
+      "turns": 8,
+      "signals": 1,
+      "summary_ok": true,
+      "expected_intent": "payment_arrangement",
+      "actual_intent": "payment_arrangement",
+      "expected_violations": [],
+      "actual_violations": []
+    },
+    {
+      "call_id": "gold-adversarial_split_across_turns-v0",
+      "category": "adversarial",
+      "turns": 10,
+      "signals": 0,
+      "summary_ok": true,
+      "expected_intent": "payment_arrangement",
+      "actual_intent": "general_inquiry",
+      "expected_violations": [],
+      "actual_violations": []
+    },
+    {
+      "call_id": "gold-adversarial_split_across_turns-v1",
+      "category": "adversarial",
+      "turns": 10,
+      "signals": 0,
+      "summary_ok": true,
+      "expected_intent": "payment_arrangement",
+      "actual_intent": "general_inquiry",
+      "expected_violations": [],
+      "actual_violations": []
+    },
+    {
+      "call_id": "gold-ambiguous_intent_mixed-v0",
+      "category": "ambiguous",
+      "turns": 10,
+      "signals": 3,
+      "summary_ok": true,
+      "expected_intent": "billing_dispute",
+      "actual_intent": "billing_dispute",
+      "expected_violations": [],
+      "actual_violations": [
+        "VERIF-004"
+      ]
+    },
+    {
+      "call_id": "gold-ambiguous_near_miss_numbers-v0",
+      "category": "ambiguous",
+      "turns": 8,
+      "signals": 2,
+      "summary_ok": true,
+      "expected_intent": "general_inquiry",
+      "actual_intent": "general_inquiry",
+      "expected_violations": [],
+      "actual_violations": []
+    },
+    {
+      "call_id": "gold-ambiguous_sarcastic_satisfaction-v0",
+      "category": "ambiguous",
+      "turns": 10,
+      "signals": 1,
+      "summary_ok": true,
+      "expected_intent": "technical_support",
+      "actual_intent": "technical_support",
+      "expected_violations": [],
+      "actual_violations": []
+    },
+    {
+      "call_id": "gold-ambiguous_third_party_pii-v0",
+      "category": "ambiguous",
+      "turns": 10,
+      "signals": 1,
+      "summary_ok": true,
+      "expected_intent": "general_inquiry",
+      "actual_intent": "general_inquiry",
+      "expected_violations": [],
+      "actual_violations": []
+    },
+    {
+      "call_id": "gold-clean_balance_inquiry-v0",
+      "category": "clean",
+      "turns": 9,
+      "signals": 2,
+      "summary_ok": true,
+      "expected_intent": "balance_inquiry",
+      "actual_intent": "balance_inquiry",
+      "expected_violations": [],
+      "actual_violations": []
+    },
+    {
+      "call_id": "gold-clean_general_inquiry_hours-v0",
+      "category": "clean",
+      "turns": 5,
+      "signals": 1,
+      "summary_ok": true,
+      "expected_intent": "general_inquiry",
+      "actual_intent": "general_inquiry",
+      "expected_violations": [],
+      "actual_violations": []
+    },
+    {
+      "call_id": "gold-clean_password_reset-v0",
+      "category": "clean",
+      "turns": 10,
+      "signals": 3,
+      "summary_ok": true,
+      "expected_intent": "password_reset",
+      "actual_intent": "password_reset",
+      "expected_violations": [],
+      "actual_violations": []
+    },
+    {
+      "call_id": "gold-clean_technical_support-v0",
+      "category": "clean",
+      "turns": 9,
+      "signals": 3,
+      "summary_ok": true,
+      "expected_intent": "technical_support",
+      "actual_intent": "technical_support",
+      "expected_violations": [],
+      "actual_violations": []
+    },
+    {
+      "call_id": "gold-compliance_fdcpa_threat-v0",
+      "category": "compliance",
+      "turns": 8,
+      "signals": 5,
+      "summary_ok": true,
+      "expected_intent": "collections",
+      "actual_intent": "collections",
+      "expected_violations": [
+        "FDCPA-006"
+      ],
+      "actual_violations": [
+        "FDCPA-006"
+      ]
+    },
+    {
+      "call_id": "gold-compliance_fdcpa_threat-v1",
+      "category": "compliance",
+      "turns": 8,
+      "signals": 5,
+      "summary_ok": true,
+      "expected_intent": "collections",
+      "actual_intent": "collections",
+      "expected_violations": [
+        "FDCPA-006"
+      ],
+      "actual_violations": [
+        "FDCPA-006"
+      ]
+    },
+    {
+      "call_id": "gold-compliance_missing_mini_miranda-v0",
+      "category": "compliance",
+      "turns": 9,
+      "signals": 2,
+      "summary_ok": true,
+      "expected_intent": "collections",
+      "actual_intent": "collections",
+      "expected_violations": [
+        "MINI-003"
+      ],
+      "actual_violations": [
+        "MINI-003"
+      ]
+    },
+    {
+      "call_id": "gold-compliance_missing_mini_miranda-v1",
+      "category": "compliance",
+      "turns": 9,
+      "signals": 2,
+      "summary_ok": true,
+      "expected_intent": "collections",
+      "actual_intent": "collections",
+      "expected_violations": [
+        "MINI-003"
+      ],
+      "actual_violations": [
+        "MINI-003"
+      ]
+    },
+    {
+      "call_id": "gold-compliance_missing_recording_disclosure-v0",
+      "category": "compliance",
+      "turns": 10,
+      "signals": 3,
+      "summary_ok": true,
+      "expected_intent": "billing_dispute",
+      "actual_intent": "billing_dispute",
+      "expected_violations": [
+        "REC-001"
+      ],
+      "actual_violations": [
+        "REC-001"
+      ]
+    },
+    {
+      "call_id": "gold-compliance_missing_recording_disclosure-v1",
+      "category": "compliance",
+      "turns": 10,
+      "signals": 3,
+      "summary_ok": true,
+      "expected_intent": "billing_dispute",
+      "actual_intent": "billing_dispute",
+      "expected_violations": [
+        "REC-001"
+      ],
+      "actual_violations": [
+        "REC-001"
+      ]
+    },
+    {
+      "call_id": "gold-compliance_missing_right_to_cancel-v0",
+      "category": "compliance",
+      "turns": 8,
+      "signals": 3,
+      "summary_ok": true,
+      "expected_intent": "plan_upgrade",
+      "actual_intent": "plan_upgrade",
+      "expected_violations": [
+        "RTC-007"
+      ],
+      "actual_violations": [
+        "RTC-007"
+      ]
+    },
+    {
+      "call_id": "gold-compliance_missing_right_to_cancel-v1",
+      "category": "compliance",
+      "turns": 8,
+      "signals": 3,
+      "summary_ok": true,
+      "expected_intent": "plan_upgrade",
+      "actual_intent": "plan_upgrade",
+      "expected_violations": [
+        "RTC-007"
+      ],
+      "actual_violations": [
+        "RTC-007"
+      ]
+    },
+    {
+      "call_id": "gold-compliance_no_identity_verification-v0",
+      "category": "compliance",
+      "turns": 6,
+      "signals": 4,
+      "summary_ok": true,
+      "expected_intent": "account_closure",
+      "actual_intent": "account_closure",
+      "expected_violations": [
+        "VERIF-004"
+      ],
+      "actual_violations": [
+        "VERIF-004"
+      ]
+    },
+    {
+      "call_id": "gold-compliance_no_identity_verification-v1",
+      "category": "compliance",
+      "turns": 6,
+      "signals": 4,
+      "summary_ok": true,
+      "expected_intent": "account_closure",
+      "actual_intent": "account_closure",
+      "expected_violations": [
+        "VERIF-004"
+      ],
+      "actual_violations": [
+        "VERIF-004"
+      ]
+    },
+    {
+      "call_id": "gold-compliance_pci_full_readback-v0",
+      "category": "compliance",
+      "turns": 8,
+      "signals": 2,
+      "summary_ok": true,
+      "expected_intent": "payment_arrangement",
+      "actual_intent": "payment_arrangement",
+      "expected_violations": [
+        "PCI-002"
+      ],
+      "actual_violations": [
+        "PCI-002"
+      ]
+    },
+    {
+      "call_id": "gold-compliance_pci_full_readback-v1",
+      "category": "compliance",
+      "turns": 8,
+      "signals": 2,
+      "summary_ok": true,
+      "expected_intent": "payment_arrangement",
+      "actual_intent": "payment_arrangement",
+      "expected_violations": [
+        "PCI-002"
+      ],
+      "actual_violations": [
+        "PCI-002"
+      ]
+    },
+    {
+      "call_id": "gold-compliance_prohibited_guarantee-v0",
+      "category": "compliance",
+      "turns": 8,
+      "signals": 5,
+      "summary_ok": true,
+      "expected_intent": "billing_dispute",
+      "actual_intent": "refund_request",
+      "expected_violations": [
+        "PROHIB-005"
+      ],
+      "actual_violations": [
+        "PROHIB-005"
+      ]
+    },
+    {
+      "call_id": "gold-compliance_prohibited_guarantee-v1",
+      "category": "compliance",
+      "turns": 8,
+      "signals": 5,
+      "summary_ok": true,
+      "expected_intent": "billing_dispute",
+      "actual_intent": "refund_request",
+      "expected_violations": [
+        "PROHIB-005"
+      ],
+      "actual_violations": [
+        "PROHIB-005"
+      ]
+    },
+    {
+      "call_id": "gold-escalation_deescalated_successfully-v0",
+      "category": "escalation",
+      "turns": 12,
+      "signals": 4,
+      "summary_ok": true,
+      "expected_intent": "technical_support",
+      "actual_intent": "technical_support",
+      "expected_violations": [],
+      "actual_violations": []
+    },
+    {
+      "call_id": "gold-escalation_legal_threat-v0",
+      "category": "escalation",
+      "turns": 10,
+      "signals": 3,
+      "summary_ok": true,
+      "expected_intent": "fraud_report",
+      "actual_intent": "fraud_report",
+      "expected_violations": [],
+      "actual_violations": []
+    },
+    {
+      "call_id": "gold-escalation_repeat_failure-v0",
+      "category": "escalation",
+      "turns": 11,
+      "signals": 5,
+      "summary_ok": true,
+      "expected_intent": "billing_dispute",
+      "actual_intent": "billing_dispute",
+      "expected_violations": [],
+      "actual_violations": []
+    },
+    {
+      "call_id": "gold-escalation_slow_burn-v0",
+      "category": "escalation",
+      "turns": 14,
+      "signals": 1,
+      "summary_ok": true,
+      "expected_intent": "billing_dispute",
+      "actual_intent": "billing_dispute",
+      "expected_violations": [],
+      "actual_violations": []
+    },
+    {
+      "call_id": "gold-pii_address_change_verified-v0",
+      "category": "pii_heavy",
+      "turns": 10,
+      "signals": 2,
+      "summary_ok": true,
+      "expected_intent": "address_change",
+      "actual_intent": "address_change",
+      "expected_violations": [],
+      "actual_violations": [
+        "VERIF-004"
+      ]
+    },
+    {
+      "call_id": "gold-pii_address_change_verified-v1",
+      "category": "pii_heavy",
+      "turns": 10,
+      "signals": 2,
+      "summary_ok": true,
+      "expected_intent": "address_change",
+      "actual_intent": "address_change",
+      "expected_violations": [],
+      "actual_violations": [
+        "VERIF-004"
+      ]
+    },
+    {
+      "call_id": "gold-pii_card_replacement-v0",
+      "category": "pii_heavy",
+      "turns": 12,
+      "signals": 3,
+      "summary_ok": true,
+      "expected_intent": "card_replacement",
+      "actual_intent": "card_replacement",
+      "expected_violations": [],
+      "actual_violations": [
+        "VERIF-004"
+      ]
+    },
+    {
+      "call_id": "gold-pii_card_replacement-v1",
+      "category": "pii_heavy",
+      "turns": 12,
+      "signals": 3,
+      "summary_ok": true,
+      "expected_intent": "card_replacement",
+      "actual_intent": "card_replacement",
+      "expected_violations": [],
+      "actual_violations": [
+        "VERIF-004"
+      ]
+    },
+    {
+      "call_id": "gold-pii_fraud_report_full_profile-v0",
+      "category": "pii_heavy",
+      "turns": 12,
+      "signals": 1,
+      "summary_ok": true,
+      "expected_intent": "fraud_report",
+      "actual_intent": "billing_dispute",
+      "expected_violations": [],
+      "actual_violations": []
+    },
+    {
+      "call_id": "gold-pii_fraud_report_full_profile-v1",
+      "category": "pii_heavy",
+      "turns": 12,
+      "signals": 1,
+      "summary_ok": true,
+      "expected_intent": "fraud_report",
+      "actual_intent": "billing_dispute",
+      "expected_violations": [],
+      "actual_violations": []
+    },
+    {
+      "call_id": "gold-pii_payment_arrangement-v0",
+      "category": "pii_heavy",
+      "turns": 10,
+      "signals": 2,
+      "summary_ok": true,
+      "expected_intent": "payment_arrangement",
+      "actual_intent": "payment_arrangement",
+      "expected_violations": [],
+      "actual_violations": []
+    },
+    {
+      "call_id": "gold-pii_payment_arrangement-v1",
+      "category": "pii_heavy",
+      "turns": 10,
+      "signals": 2,
+      "summary_ok": true,
+      "expected_intent": "payment_arrangement",
+      "actual_intent": "payment_arrangement",
+      "expected_violations": [],
+      "actual_violations": []
+    },
+    {
+      "call_id": "gold-pii_refund_bank_details-v0",
+      "category": "pii_heavy",
+      "turns": 10,
+      "signals": 3,
+      "summary_ok": true,
+      "expected_intent": "refund_request",
+      "actual_intent": "refund_request",
+      "expected_violations": [],
+      "actual_violations": []
+    },
+    {
+      "call_id": "gold-pii_refund_bank_details-v1",
+      "category": "pii_heavy",
+      "turns": 10,
+      "signals": 3,
+      "summary_ok": true,
+      "expected_intent": "refund_request",
+      "actual_intent": "refund_request",
+      "expected_violations": [],
+      "actual_violations": []
+    }
+  ]
+}

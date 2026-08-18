@@ -24,9 +24,9 @@ services/ingest/ingest
 data/audio/*.wav
 data/audio/*.aiff
 data/models/
-eval/reports/*.json
-eval/reports/*.md
-!eval/reports/.gitkeep
+# Eval reports ARE committed. They are the evidence behind every number in
+# EVAL.md, and a reader should be able to inspect them without first
+# reproducing a 6-minute audio run.
 .artifacts/
 
 # Local config & secrets
