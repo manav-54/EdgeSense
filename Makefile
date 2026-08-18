@@ -126,6 +126,14 @@ dev-call: ## Stream one real call through the edge agent to JSONL
 
 # ---------------------------------------------------------------- stack ---
 
+.PHONY: stack
+stack: ## Start ClickHouse + API + portal locally, no Docker needed
+	./scripts/dev-stack.sh
+
+.PHONY: stack-stop
+stack-stop: ## Stop the local stack
+	./scripts/dev-stack.sh stop
+
 .PHONY: up
 up: ## Start the full docker-compose stack
 	docker compose up -d --build

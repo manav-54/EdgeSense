@@ -110,36 +110,54 @@ Rationale, alternatives and failure modes: **[DESIGN.md](DESIGN.md)**.
 ## Quick start
 
 ```bash
-make install          # Python venv + all service deps + spaCy model
-make corpus           # 48 labelled synthetic calls
-make audio            # synthesise real audio (33 min of WAVs)
-make test             # egress suite + Go contract tests
-make eval             # full evaluation, prints the table in EVAL.md
+git clone https://github.com/manav-54/EdgeSense.git && cd EdgeSense
+make install            # venv + all Python deps + spaCy model
+make portal-install     # portal deps
+make corpus             # 48 labelled synthetic calls
 ```
 
-The full stack:
+**Run the app** (no Docker required — fetches a single ClickHouse binary on
+first use):
 
 ```bash
-make demo             # compose up, generate audio, stream a real call
-# portal   http://localhost:5173
-# grafana  http://localhost:3000
-# jaeger   http://localhost:16686
+./scripts/dev-stack.sh          # ClickHouse + API + portal
+make seed                       # populate the dashboard (~5 min)
+make loadtest                   # fill the latency panel with real measurements
 ```
 
-No cloud credentials are needed. Without Azure the worker uses a deterministic
-offline provider that walks the same tool-calling loop, so the pipeline and the
-eval both run end to end. To use Azure OpenAI, copy `.env.example` to `.env`
-and fill in the Azure block.
+Then open **http://localhost:5173**. Stop with `./scripts/dev-stack.sh stop`.
 
-> **Verification status.** Everything above the compose line was executed on the
-> host described in EVAL.md: real audio, real faster-whisper, real ClickHouse
-> (schema applied and queried, plans captured in
+**Run the evaluation** — this needs no infrastructure and no credentials at
+all:
+
+```bash
+make test               # 13 egress tests + Go contract tests
+make eval               # full 48-call evaluation, ~90s
+make audio              # synthesise 33 min of real speech (~20 min, once)
+make eval-audio         # the same evaluation through real faster-whisper
+```
+
+**Stream a real call through the edge agent:**
+
+```bash
+make audio              # if you have not already
+make dev-call           # prints the redacted transcript
+```
+
+No cloud credentials are needed anywhere. Without Azure the worker uses a
+deterministic offline provider that walks the same tool-calling loop, so the
+pipeline and the evaluation both run end to end. To use Azure OpenAI, copy
+`.env.example` to `.env` and fill in the Azure block.
+
+> **Verification status.** Everything above was executed on the host described
+> in EVAL.md: real audio, real faster-whisper, real ClickHouse (schema applied
+> and queried, plans captured in
 > [docs/clickhouse-explain.md](docs/clickhouse-explain.md)), real Go build and
-> tests, portal rendered and screenshotted. Docker was not available on this
-> machine, so `docker-compose.yml` and the Dockerfiles are written and
-> YAML-validated but have not been executed.
-
----
+> tests, portal rendered and screenshotted. A fresh clone reproduces the
+> published redaction metrics byte-identically. Docker was not available on
+> this machine, so `docker-compose.yml` and the Dockerfiles are written and
+> YAML-validated but have not been executed — `./scripts/dev-stack.sh` is the
+> path that was actually run.
 
 ## How a call flows through the system
 
